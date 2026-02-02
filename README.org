@@ -1,0 +1,3 @@
+* Homelab
+
+Configuration of my homelab
