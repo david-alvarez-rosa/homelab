@@ -1,0 +1,12 @@
+[Unit]
+Description=api.alvarezrosa.com
+After=network.target
+
+[Service]
+User=api
+WorkingDirectory=/srv/api.alvarezrosa.com/
+ExecStart=/srv/api.alvarezrosa.com/.local/bin/uv run uvicorn backend:app --host 127.0.0.1 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
