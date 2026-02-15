@@ -1,0 +1,15 @@
+[Unit]
+Description=Unwall API
+After=network.target
+
+[Service]
+Type=simple
+User=unwall
+WorkingDirectory=/srv/api.unwall.app
+ExecStart=/usr/bin/node /srv/api.unwall.app/backend/src/index.js
+Restart=on-failure
+Environment="NODE_ENV=production"
+Environment="PORT=3001"
+
+[Install]
+WantedBy=multi-user.target
