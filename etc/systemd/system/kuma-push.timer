@@ -1,0 +1,10 @@
+[Unit]
+Description=Run kuma-push every minute
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=60
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

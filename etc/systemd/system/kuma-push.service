@@ -1,0 +1,8 @@
+[Unit]
+Description=Push host CPU/RAM/disk to Uptime Kuma
+After=docker.service
+Wants=kuma-push.timer
+
+[Service]
+Type=oneshot
+ExecStart=/srv/status.alvarezrosa.com/kuma-push.sh
