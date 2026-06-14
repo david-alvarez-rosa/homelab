@@ -19,5 +19,5 @@ for repo in "$LOCAL_REPO" "$S3_REPO"; do
     --exclude '*/.cache' \
     --exclude /var/lib/docker/volumes/nextcloud_aio_elasticsearch \
     --exclude /var/lib/docker/volumes/nextcloud_aio_redis
-  restic -r "$repo" forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6
+  restic -r "$repo" forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2
 done
