@@ -1,9 +1,9 @@
 [Unit]
-Description=Run kuma-push every minute
+Description=Run kuma-push every 5 minutes
 
 [Timer]
-OnBootSec=60
-OnUnitActiveSec=60
+OnBootSec=300
+OnUnitActiveSec=300
 AccuracySec=5s
 
 [Install]

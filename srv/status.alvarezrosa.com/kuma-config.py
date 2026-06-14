@@ -15,6 +15,7 @@ existing = {m["name"]: m["id"] for m in api.get_monitors()}
 def ensure(name, **kw):
     if name in existing:
         return existing[name]
+    kw.setdefault("interval", 300)
     existing[name] = api.add_monitor(name=name, **kw)["monitorID"]
     return existing[name]
 
@@ -33,8 +34,8 @@ sites = [
     # Tor/.onion site: served by the onion vhost on 127.0.0.1:8080 (torrc: HiddenServicePort 80 -> 8080).
     # Checked locally via host.docker.internal with the onion Host header (not over Tor; see Option A).
     ensure("dhevt6e4rtgbtr3jh53xrpwmgtilkah6nyjujocsspssrsexc7omxhid.onion", type=MonitorType.HTTP, url="http://host.docker.internal:8080", parent=g_sites, accepted_statuscodes=OK, headers='{"Host": "dhevt6e4rtgbtr3jh53xrpwmgtilkah6nyjujocsspssrsexc7omxhid.onion"}'),
-    ensure("tic-tac-toe", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/tres-en-raya/", parent=g_sites, accepted_statuscodes=OK),
-    ensure("pasatiempos-dn", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/pasatiempos-dn/", parent=g_sites, accepted_statuscodes=OK),
+    ensure("david.alvarezrosa.com/tres-en-raya", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/tres-en-raya/", parent=g_sites, accepted_statuscodes=OK),
+    ensure("david.alvarezrosa.com/pasatiempos-dn", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/pasatiempos-dn/", parent=g_sites, accepted_statuscodes=OK),
     ensure("analytics.alvarezrosa.com", type=MonitorType.HTTP, url="https://analytics.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
