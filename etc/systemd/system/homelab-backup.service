@@ -1,0 +1,8 @@
+[Unit]
+Description=Homelab restic backup (local + S3)
+Wants=network-online.target docker.service
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/homelab-backup

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source /root/.restic/env
+
+mkdir -p /var/backups/homelab
+docker exec manual-install-nextcloud-aio-database-1 pg_dump -U nextcloud nextcloud_database > /var/backups/homelab/nextcloud.sql
+docker exec analyticsalvarezrosacom-db-1 pg_dump -U umami umami > /var/backups/homelab/umami.sql
+for db in /var/lib/unwall/stats.db \
+          /srv/api.alvarezrosa.com/subscriptions.db; do
+  sqlite3 "$db" ".backup '/var/backups/homelab/$(basename "$db")'"
+done
+
+for repo in "$LOCAL_REPO" "$S3_REPO"; do
+  restic -r "$repo" backup --tag homelab \
+    /etc /home /root /srv /var \
+    --exclude /var/lib/docker/rootfs \
+    --exclude /var/lib/containerd \
+    --exclude /var/cache \
+    --exclude '*/.cache' \
+    --exclude /var/lib/docker/volumes/nextcloud_aio_elasticsearch \
+    --exclude /var/lib/docker/volumes/nextcloud_aio_redis
+  restic -r "$repo" forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6
+done
