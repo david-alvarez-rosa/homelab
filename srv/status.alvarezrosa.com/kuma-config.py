@@ -15,7 +15,7 @@ existing = {m["name"]: m["id"] for m in api.get_monitors()}
 def ensure(name, **kw):
     if name in existing:
         return existing[name]
-    kw.setdefault("interval", 300)
+    kw.setdefault("interval", 1800)
     existing[name] = api.add_monitor(name=name, **kw)["monitorID"]
     return existing[name]
 
