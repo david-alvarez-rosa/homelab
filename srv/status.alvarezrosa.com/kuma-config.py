@@ -22,7 +22,6 @@ def ensure(name, **kw):
 g_sites = ensure("Sites", type=MonitorType.GROUP)
 g_api = ensure("APIs", type=MonitorType.GROUP)
 g_infra = ensure("Infrastructure", type=MonitorType.GROUP)
-g_host = ensure("Host", type=MonitorType.GROUP)
 
 OK = ["200-299"]
 API = ["200-299", "400-499"]
@@ -49,7 +48,7 @@ if GATEWAY:
     infra.append(ensure("Network — gateway", type=MonitorType.PING, hostname=GATEWAY, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 
-host = [ensure(label, type=MonitorType.PUSH, parent=g_host) for label in ("CPU", "RAM", "Disk")]
+host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU", "RAM", "Disk")]
 
 if SLUG not in {p["slug"] for p in api.get_status_pages()}:
     api.add_status_page(SLUG, TITLE)
@@ -66,8 +65,7 @@ api.save_status_page(
     publicGroupList=[
         {"name": "Sites", "monitorList": [{"id": i} for i in sites]},
         {"name": "APIs", "monitorList": [{"id": i} for i in apis]},
-        {"name": "Infrastructure", "monitorList": [{"id": i} for i in infra]},
-        {"name": "Host resources", "monitorList": [{"id": i} for i in host]},
+        {"name": "Infrastructure", "monitorList": [{"id": i} for i in infra + host]},
     ],
 )
 print("done:", TITLE)
