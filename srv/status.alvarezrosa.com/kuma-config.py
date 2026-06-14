@@ -39,6 +39,7 @@ sites = [
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
+    ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
 ]
 apis = [
     ensure("api.alvarezrosa.com", type=MonitorType.HTTP, url="https://api.alvarezrosa.com", parent=g_api, accepted_statuscodes=API),
