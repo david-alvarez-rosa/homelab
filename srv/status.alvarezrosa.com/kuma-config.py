@@ -18,26 +18,25 @@ def ensure(name, **kw):
     existing[name] = api.add_monitor(name=name, **kw)["monitorID"]
     return existing[name]
 
-g_web = ensure("Websites", type=MonitorType.GROUP)
+g_sites = ensure("Sites", type=MonitorType.GROUP)
 g_api = ensure("APIs", type=MonitorType.GROUP)
-g_cloud = ensure("Cloud", type=MonitorType.GROUP)
 g_infra = ensure("Infrastructure", type=MonitorType.GROUP)
 g_host = ensure("Host", type=MonitorType.GROUP)
 
 OK = ["200-299"]
 API = ["200-299", "400-499"]
 
-web = [
-    ensure("unwall.app", type=MonitorType.HTTP, url="https://unwall.app", parent=g_web, accepted_statuscodes=OK),
-    ensure("david.alvarezrosa.com", type=MonitorType.HTTP, url="https://david.alvarezrosa.com", parent=g_web, accepted_statuscodes=OK),
-    ensure("analytics.alvarezrosa.com", type=MonitorType.HTTP, url="https://analytics.alvarezrosa.com", parent=g_web, accepted_statuscodes=OK),
+sites = [
+    ensure("unwall.app", type=MonitorType.HTTP, url="https://unwall.app", parent=g_sites, accepted_statuscodes=OK),
+    ensure("live.unwall.app", type=MonitorType.HTTP, url="https://live.unwall.app", parent=g_sites, accepted_statuscodes=OK),
+    ensure("david.alvarezrosa.com", type=MonitorType.HTTP, url="https://david.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
+    ensure("analytics.alvarezrosa.com", type=MonitorType.HTTP, url="https://analytics.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
+    ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
+    ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
 ]
 apis = [
     ensure("api.alvarezrosa.com", type=MonitorType.HTTP, url="https://api.alvarezrosa.com", parent=g_api, accepted_statuscodes=API),
     ensure("api.unwall.app", type=MonitorType.HTTP, url="https://api.unwall.app", parent=g_api, accepted_statuscodes=API),
-]
-cloud = [
-    ensure("Nextcloud", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_cloud, accepted_statuscodes=OK),
 ]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
 if GATEWAY:
@@ -59,9 +58,8 @@ api.save_status_page(
     showPoweredBy=False,
     customCSS="",
     publicGroupList=[
-        {"name": "Websites", "monitorList": [{"id": i} for i in web]},
+        {"name": "Sites", "monitorList": [{"id": i} for i in sites]},
         {"name": "APIs", "monitorList": [{"id": i} for i in apis]},
-        {"name": "Cloud", "monitorList": [{"id": i} for i in cloud]},
         {"name": "Infrastructure", "monitorList": [{"id": i} for i in infra]},
         {"name": "Host resources", "monitorList": [{"id": i} for i in host]},
     ],
