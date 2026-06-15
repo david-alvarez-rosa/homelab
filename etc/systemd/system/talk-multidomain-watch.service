@@ -1,0 +1,12 @@
+[Unit]
+Description=Reapply Talk second-domain signaling fix when the Talk container starts
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/talk-multidomain-watch.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
