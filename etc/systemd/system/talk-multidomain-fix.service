@@ -1,0 +1,8 @@
+[Unit]
+Description=Keep second domain in Nextcloud Talk signaling allow-list
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/talk-multidomain-fix.sh

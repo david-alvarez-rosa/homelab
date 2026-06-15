@@ -1,0 +1,10 @@
+[Unit]
+Description=Re-apply Talk second-domain fix periodically and after boot
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=2min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target
