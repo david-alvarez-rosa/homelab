@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=api
 WorkingDirectory=/srv/api.alvarezrosa.com/
-EnvironmentFile=/srv/api.alvarezrosa.com/.env
+EnvironmentFile=/etc/api.env
 ExecStart=/srv/api.alvarezrosa.com/.local/bin/uv run uvicorn api.api:app --host 127.0.0.1 --port 8000
 Restart=always
 
