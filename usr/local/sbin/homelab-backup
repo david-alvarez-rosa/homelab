@@ -6,7 +6,7 @@ mkdir -p /var/backups/homelab
 docker exec manual-install-nextcloud-aio-database-1 pg_dump -U nextcloud nextcloud_database > /var/backups/homelab/nextcloud.sql
 docker exec analyticsalvarezrosacom-db-1 pg_dump -U umami umami > /var/backups/homelab/umami.sql
 for db in /var/lib/unwall/stats.db \
-          /srv/api.alvarezrosa.com/subscriptions.db; do
+          /var/lib/api/subscriptions.db; do
   sqlite3 "$db" ".backup '/var/backups/homelab/$(basename "$db")'"
 done
 
