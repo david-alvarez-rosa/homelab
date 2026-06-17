@@ -1,9 +1,0 @@
-[Unit]
-Description=Daily connectivity watchdog at 05:00
-
-[Timer]
-OnCalendar=*-*-* 05:00:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target
