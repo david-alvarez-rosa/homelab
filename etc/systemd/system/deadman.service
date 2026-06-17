@@ -1,5 +1,5 @@
 [Unit]
-Description=Reboot if ssh.alvarezrosa.com is unreachable (connectivity watchdog)
+Description=Dead-man switch: reboot if ssh.alvarezrosa.com is unreachable
 After=network-online.target wg-quick@wg0.service
 Wants=network-online.target
 

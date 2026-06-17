@@ -1,5 +1,5 @@
 [Unit]
-Description=Hourly connectivity watchdog
+Description=Hourly dead-man switch check
 
 [Timer]
 OnCalendar=hourly
