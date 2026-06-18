@@ -21,6 +21,7 @@ def ensure(name, **kw):
 
 g_sites = ensure("Sites", type=MonitorType.GROUP)
 g_api = ensure("APIs", type=MonitorType.GROUP)
+g_mail = ensure("Mail", type=MonitorType.GROUP)
 g_infra = ensure("Infrastructure", type=MonitorType.GROUP)
 
 OK = ["200-299"]
@@ -45,6 +46,11 @@ apis = [
     ensure("api.alvarezrosa.com", type=MonitorType.HTTP, url="https://api.alvarezrosa.com", parent=g_api, accepted_statuscodes=API),
     ensure("api.unwall.app", type=MonitorType.HTTP, url="https://api.unwall.app", parent=g_api, accepted_statuscodes=API),
 ]
+mail = [
+    ensure("Mail — Inbound (SMTP)", type=MonitorType.PORT, hostname="host.docker.internal", port=25, parent=g_mail),
+    ensure("Mail — Submission", type=MonitorType.PORT, hostname="host.docker.internal", port=465, parent=g_mail),
+    ensure("Mail — IMAP", type=MonitorType.PORT, hostname="host.docker.internal", port=993, parent=g_mail),
+]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
 if GATEWAY:
     infra.append(ensure("Network — gateway", type=MonitorType.PING, hostname=GATEWAY, parent=g_infra))
@@ -67,6 +73,7 @@ api.save_status_page(
     publicGroupList=[
         {"name": "Sites", "monitorList": [{"id": i} for i in sites]},
         {"name": "APIs", "monitorList": [{"id": i} for i in apis]},
+        {"name": "Mail", "monitorList": [{"id": i} for i in mail]},
         {"name": "Infrastructure", "monitorList": [{"id": i} for i in infra + host]},
     ],
 )
