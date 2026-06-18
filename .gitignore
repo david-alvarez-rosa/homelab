@@ -1,0 +1,9 @@
+# Secrets — never commit (public repo)
+etc/dovecot/users
+etc/dovecot/private/
+etc/opendkim/keys/
+etc/letsencrypt/
+etc/wireguard/
+
+# Generated Postfix lookup tables (rebuild with postmap)
+etc/postfix/*.db
