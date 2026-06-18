@@ -34,9 +34,6 @@
 ### tuple ### allow tcp 25 ::/0 any ::/0 in
 -A ufw6-user-input -p tcp --dport 25 -j ACCEPT
 
-### tuple ### allow tcp 143 ::/0 any ::/0 in
--A ufw6-user-input -p tcp --dport 143 -j ACCEPT
-
 ### tuple ### allow tcp 993 ::/0 any ::/0 in
 -A ufw6-user-input -p tcp --dport 993 -j ACCEPT
 
