@@ -55,6 +55,7 @@ infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", p
 if GATEWAY:
     infra.append(ensure("Network — gateway", type=MonitorType.PING, hostname=GATEWAY, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
+infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
 host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU", "RAM", "Disk")]
 
