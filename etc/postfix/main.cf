@@ -1,40 +1,24 @@
-# See /usr/share/postfix/main.cf.dist for a commented, more complete version
-
-# See http://www.postfix.org/COMPATIBILITY_README.html
 compatibility_level = 3.9
 
-# Which domain that locally-originated mail appears to come from.
-# Debian policy suggests to read this value from /etc/mailname.
-#XX needs a review in postinst&config
-#myorigin = /etc/mailname
-#myorigin = $mydomain
 myhostname = mail.alvarezmagan.com
 mydomain = alvarezmagan.com
 myorigin = $mydomain
-
-# Text that follows the 220 code in the SMTP server's greeting banner.
-# You MUST specify $myhostname at the start due to an RFC requirement.
+mydestination = $myhostname, localhost.$mydomain, localhost
 smtpd_banner = $myhostname ESMTP $mail_name (Debian)
 
-# IP protocols to use: ipv4, ipv6, or all
-# (set this explicitly so `post-install upgrade-configuration' wont complain)
+inet_interfaces = all
 inet_protocols = all
+smtp_bind_address = 10.0.0.2
 
-# List of "trusted" SMTP clients (maptype:mapname allowed) that have more
-# privileges than "strangers".  If mynetworks is not specified (the default),
-# mynetworks_style is used to compute its value.
-#mynetworks_style = class
-#mynetworks_style = subnet
 mynetworks_style = host
-#
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 
-# Uncomment the next line to generate "delayed mail" warnings
-#delay_warning_time = 4h
+biff = no
+recipient_delimiter = +
+mailbox_size_limit = 0
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
 
-# List of domains (maptype:mapname allowed) that this machine considers
-# itself the final destination for.
-mydestination = $myhostname, localhost.alvarezmagan.com, localhost
 virtual_mailbox_domains = alvarezmagan.com
 virtual_mailbox_base = /var/mail/vmail
 virtual_mailbox_maps = hash:/etc/postfix/vmailbox
@@ -42,61 +26,21 @@ virtual_alias_maps = hash:/etc/postfix/virtual
 virtual_uid_maps = static:5000
 virtual_gid_maps = static:5000
 
-# Maximum size of a user mailbox
-mailbox_size_limit = 0
-
-# Optional external command to use instead of mailbox delivery.  If set,
-# you must set up an alias to forward root mail to a real user.
-#mailbox_command = /usr/bin/procmail
-#mailbox_command = /usr/bin/procmail -a "$EXTENSION"
-mailbox_command =
-
-# List of alias maps to use to lookup local addresses.
-# Per Debian Policy it should be /etc/aliases.
-alias_maps = hash:/etc/aliases
-
-# List of alias maps to make indexes on, when running newaliases.
-alias_database = hash:/etc/aliases
-
-# Notify (or not) local biff service when new mail arrives.
-# Rarely used these days.
-biff = no
-
-# Separator between user name and address extension (user+foo@domain)
-#recipient_delimiter = +
-recipient_delimiter = +
-
-# A host to send "other" mail to
-#relayhost = $mydomain
-#relayhost = [gateway.example.com]
-#relayhost = [ip.add.re.ss]:port
-#relayhost = uucphost
-relayhost =
-
-# Where to look for Cyrus SASL configuration files.  Upstream default is unset
-# (use compiled-in SASL library default), Debian Policy says it should be
-# /etc/postfix/sasl.
-cyrus_sasl_config_path = /etc/postfix/sasl
-
-# SMTP server RSA key and certificate in PEM format
-smtpd_tls_key_file = /etc/letsencrypt/live/alvarezmagan.com/privkey.pem
-smtpd_tls_cert_file = /etc/letsencrypt/live/alvarezmagan.com/fullchain.pem
-# SMTP Server security level: none|may|encrypt
-smtpd_tls_security_level = may
-
-# List of CAs for SMTP Client to trust
-# Prefer this over _CApath when smtp is running chrooted
-smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
-# SMTP Client TLS security level: none|may|encrypt|...
-smtp_tls_security_level = may
-# SMTP Client TLS session cache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
-inet_interfaces = all
-smtp_bind_address = 10.0.0.2
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
+
+smtpd_tls_cert_file = /etc/letsencrypt/live/alvarezmagan.com/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/alvarezmagan.com/privkey.pem
+smtpd_tls_security_level = may
+smtp_tls_security_level = may
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+
 milter_default_action = accept
 milter_protocol = 6
-smtpd_milters = inet:localhost:12301
-non_smtpd_milters = inet:localhost:12301
+smtpd_milters = inet:127.0.0.1:12301
+non_smtpd_milters = inet:127.0.0.1:12301
