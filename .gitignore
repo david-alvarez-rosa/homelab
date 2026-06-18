@@ -1,9 +1,21 @@
 # Secrets — never commit (public repo)
+etc/api.env
+etc/cloudflared/*.json
 etc/dovecot/users
 etc/dovecot/private/
+etc/nginx/.htpasswd*
 etc/opendkim/keys/
 etc/letsencrypt/
 etc/wireguard/
+srv/**/.env
+srv/**/.kuma-push.env
+
+# APT repo signing keys (public, but kept out of the repo)
+etc/apt/keyrings/
+etc/apt/trusted.gpg.d/
+
+# DH parameters (public, but key-shaped and regenerable)
+etc/dhparam
 
 # Generated Postfix lookup tables (rebuild with postmap)
 etc/postfix/*.db

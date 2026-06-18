@@ -1,0 +1,5 @@
+auto lo
+iface lo inet loopback
+allow-hotplug enp3s0f1
+iface enp3s0f1 inet dhcp
+iface enp3s0f1 inet6 auto
