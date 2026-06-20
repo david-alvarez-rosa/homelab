@@ -1,4 +1,3 @@
-# /etc/aliases
 mailer-daemon: postmaster
 postmaster: root
 nobody: root

@@ -1,4 +1,3 @@
-# service type  private unpriv  chroot  wakeup  maxproc command + args
 smtp      inet  n       -       y       -       -       smtpd
 submissions inet n      -       y       -       -       smtpd
   -o syslog_name=postfix/submissions
