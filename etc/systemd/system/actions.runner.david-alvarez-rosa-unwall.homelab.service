@@ -1,0 +1,14 @@
+[Unit]
+Description=GitHub Actions Runner (david-alvarez-rosa-unwall.homelab)
+After=network-online.target
+
+[Service]
+ExecStart=/home/unwall/actions-runner/runsvc.sh
+User=unwall
+WorkingDirectory=/home/unwall/actions-runner
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=5min
+
+[Install]
+WantedBy=multi-user.target
