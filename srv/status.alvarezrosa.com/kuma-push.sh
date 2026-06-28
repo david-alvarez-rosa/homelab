@@ -7,6 +7,7 @@ DISK_MOUNT="/"
 CPU_MAX=90
 RAM_MAX=90
 DISK_MAX=90
+ETH_STATE="/var/lib/kuma-push/eth.last"
 
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
 
@@ -16,6 +17,7 @@ read -r _ u2 n2 s2 i2 w2 q2 sq2 _ < /proc/stat
 idle=$(( (i2 + w2) - (i1 + w1) ))
 total=$(( (u2+n2+s2+i2+w2+q2+sq2) - (u1+n1+s1+i1+w1+q1+sq1) ))
 cpu=$(( total > 0 ? (100 * (total - idle)) / total : 0 ))
+cpu=$(( cpu < 1 ? 1 : cpu ))
 
 mt=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
 ma=$(awk '/^MemAvailable:/{print $2}' /proc/meminfo)
@@ -36,3 +38,30 @@ push() {
 push "${CPU_TOKEN:-}"  "$cpu"  "$CPU_MAX"
 push "${RAM_TOKEN:-}"  "$ram"  "$RAM_MAX"
 push "${DISK_TOKEN:-}" "$disk" "$DISK_MAX"
+
+push_eth() {
+  local token="${ETH_TOKEN:-}" iface="${ETH_IFACE:-}" rx tx cur last delta gb
+  [ -z "$token" ] && return 0
+  [ -z "$iface" ] && return 0
+  [ -r "/sys/class/net/$iface/statistics/rx_bytes" ] || return 0
+  rx=$(cat "/sys/class/net/$iface/statistics/rx_bytes")
+  tx=$(cat "/sys/class/net/$iface/statistics/tx_bytes")
+  cur=$(( rx + tx ))
+  mkdir -p "$(dirname "$ETH_STATE")"
+  last=$(cat "$ETH_STATE" 2>/dev/null || echo "")
+  if [ -z "$last" ]; then
+    delta=0
+  elif [ "$cur" -lt "$last" ]; then
+    delta=$cur
+  else
+    delta=$(( cur - last ))
+  fi
+  echo "$cur" > "$ETH_STATE"
+  gb=$(awk -v b="$delta" 'BEGIN{g=b/1073741824; if(g<0.001)g=0.001; printf "%.3f", g}')
+  curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
+    --data-urlencode "status=up" \
+    --data-urlencode "msg=${gb} GB" \
+    --data-urlencode "ping=$gb" || true
+}
+
+push_eth
