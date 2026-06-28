@@ -3,3 +3,9 @@ iface lo inet loopback
 allow-hotplug enp3s0f1
 iface enp3s0f1 inet dhcp
 iface enp3s0f1 inet6 auto
+
+allow-hotplug enx001e101f0000
+iface enx001e101f0000 inet static
+    address 192.168.8.100/24
+    post-up /usr/local/sbin/modem-routing $IFACE
+    pre-down ip rule del from 192.168.8.100 table 100 priority 100

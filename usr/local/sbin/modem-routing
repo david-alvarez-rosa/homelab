@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+IF="$1"
+SRC=192.168.8.100
+GW=192.168.8.1
+TABLE=100
+ip route replace 192.168.8.0/24 dev "$IF" src "$SRC" table "$TABLE"
+ip route replace default via "$GW" dev "$IF" table "$TABLE"
+ip rule del from "$SRC" table "$TABLE" priority 100 2>/dev/null || true
+ip rule add from "$SRC" table "$TABLE" priority 100
+sysctl -qw net.ipv4.conf."$IF".rp_filter=2

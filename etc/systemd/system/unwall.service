@@ -10,6 +10,9 @@ ExecStart=/usr/bin/node --max-old-space-size=6144 /srv/api.unwall.app/backend/in
 Restart=on-failure
 Environment="NODE_ENV=production"
 Environment="PORT=3001"
+Environment="UNWALL_MODEM_EGRESS=fallback"
+Environment="UNWALL_MODEM_LOCAL_ADDR=192.168.8.100"
+Environment="UNWALL_MODEM_PROXY=socks5://127.0.0.1:1081"
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=SOCKS5 proxy egressing via LTE modem, loopback no-auth (microsocks)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Loopback-only + no auth: reachable only by local processes (CycleTLS cannot
+# authenticate to a SOCKS5 proxy, so the on-host clients use this one). Egresses
+# from the modem source IP via the policy route (ip rule from 192.168.8.100).
+ExecStart=/usr/bin/microsocks -i 127.0.0.1 -p 1081 -b 192.168.8.100
+Restart=on-failure
+RestartSec=2
+DynamicUser=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
