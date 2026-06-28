@@ -1,0 +1,18 @@
+[Unit]
+Description=GitHub Actions self-hosted runner (homelab)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=github-runner
+WorkingDirectory=/opt/github-runner
+ExecStart=/opt/github-runner/bin/runsvc.sh
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=5min
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
