@@ -1,0 +1,54 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ludeeus/action-shellcheck@master
+
+  yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --quiet pyyaml
+      - name: Validate YAML syntax
+        run: |
+          python3 - <<'PY'
+          import glob, sys, yaml
+          rc = 0
+          for f in glob.glob("**/*.yml", recursive=True) + glob.glob("**/*.yaml", recursive=True):
+              try:
+                  list(yaml.safe_load_all(open(f)))
+              except yaml.YAMLError as e:
+                  print(f"::error file={f}::{e}")
+                  rc = 1
+          sys.exit(rc)
+          PY
+
+  nginx:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --quiet gixy-ng
+      - name: gixy
+        run: |
+          sudo mkdir -p /etc/nginx
+          sudo cp -r etc/nginx/. /etc/nginx/
+          sudo touch /etc/nginx/mime.types /etc/nginx/fastcgi_params
+          gixy /etc/nginx/nginx.conf
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: gitleaks
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest dir /repo --no-banner --redact
