@@ -1,3 +1,23 @@
-* Homelab
+#+title: Homelab
+#+author: David Álvarez Rosa
+#+email: david@alvarezrosa.com
+#+language: en
 
-Configuration files of my personal homelab.
+
+Configuration for my personal homelab exposed to the Internet through a
+WireGuard tunnel to a VPS bastion, and served via a global CDN.
+
+Live status: [[https://status.alvarezrosa.com][status.alvarezrosa.com]].
+
+- nginx :: reverse proxy and static host for my sites.
+- Postfix + Dovecot + OpenDKIM :: self-hosted mail (SMTP, IMAPS, DKIM).
+- Nextcloud :: files and Talk (Docker; coturn for TURN).
+- umami :: privacy-friendly web analytics (Docker + Postgres).
+- Uptime Kuma :: public status page plus host CPU/RAM/disk/net monitors.
+- Tor :: serves the david site as a hidden service.
+- cloudflared :: backup SSH tunnel, in case the WireGuard path is down.
+- microsocks :: SOCKS5 proxy egressing through an isolated LTE modem.
+- GitHub Actions runner :: self-hosted runner for my repos.
+- restic :: nightly backups to local disk and S3.
+- deadman :: reboots the box if it loses its own SSH reachability.
+- ufw + fail2ban :: firewall and brute-force banning.
