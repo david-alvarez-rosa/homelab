@@ -7,8 +7,6 @@
 Configuration for my personal homelab exposed to the Internet through a
 WireGuard tunnel to a VPS bastion, and served via a global CDN.
 
-Live status: [[https://status.alvarezrosa.com][status.alvarezrosa.com]].
-
 - nginx :: reverse proxy and static host for my sites.
 - Postfix + Dovecot + OpenDKIM :: self-hosted mail (SMTP, IMAPS, DKIM).
 - Nextcloud :: files and Talk (Docker; coturn for TURN).
@@ -21,3 +19,5 @@ Live status: [[https://status.alvarezrosa.com][status.alvarezrosa.com]].
 - restic :: nightly backups to local disk and S3.
 - deadman :: reboots the box if it loses its own SSH reachability.
 - ufw + fail2ban :: firewall and brute-force banning.
+
+Live status: [[https://status.alvarezrosa.com][status.alvarezrosa.com]].
