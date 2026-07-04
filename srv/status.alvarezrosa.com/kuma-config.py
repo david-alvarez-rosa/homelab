@@ -4,7 +4,6 @@ from uptime_kuma_api import UptimeKumaApi, MonitorType
 URL = "http://127.0.0.1:3011"
 USER = os.environ["KUMA_USER"]
 PW = os.environ["KUMA_PASS"]
-GATEWAY = os.environ.get("GATEWAY", "").strip()
 TITLE = "Homelab Status"
 SLUG = "main"
 
@@ -35,10 +34,13 @@ sites = [
     ensure("david.alvarezrosa.com/tres-en-raya", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/tres-en-raya/", parent=g_sites, accepted_statuscodes=OK),
     ensure("david.alvarezrosa.com/pasatiempos-dn", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/pasatiempos-dn/", parent=g_sites, accepted_statuscodes=OK),
     ensure("analytics.alvarezrosa.com", type=MonitorType.HTTP, url="https://analytics.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
+    ensure("chat.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://chat.alvarezrosa.com/", keyword="<title>Element</title>", parent=g_sites, accepted_statuscodes=OK),
+    ensure("matrix.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://matrix.alvarezrosa.com/_matrix/client/versions", keyword='"versions"', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
     ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
+    ensure("recomprehension.com", type=MonitorType.HTTP, url="https://recomprehension.com", parent=g_sites, accepted_statuscodes=OK),
 ]
 apis = [
     ensure("api.alvarezrosa.com", type=MonitorType.HTTP, url="https://api.alvarezrosa.com", parent=g_api, accepted_statuscodes=API),
@@ -50,12 +52,10 @@ mail = [
     ensure("Mail — IMAP", type=MonitorType.PORT, hostname="host.docker.internal", port=993, parent=g_mail),
 ]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
-if GATEWAY:
-    infra.append(ensure("Network — gateway", type=MonitorType.PING, hostname=GATEWAY, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
-host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU", "RAM", "Disk")]
+host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU (% used)", "RAM (% used)", "Disk (% used)", "Ethernet (GB)")]
 
 if SLUG not in {p["slug"] for p in api.get_status_pages()}:
     api.add_status_page(SLUG, TITLE)
@@ -68,7 +68,8 @@ api.save_status_page(
     published=True,
     showTags=False,
     showPoweredBy=False,
-    customCSS="",
+    footerText="Free as in freedom",
+    customCSS="body {\n  \n}\n",
     publicGroupList=[
         {"name": "Sites", "monitorList": [{"id": i} for i in sites]},
         {"name": "APIs", "monitorList": [{"id": i} for i in apis]},
