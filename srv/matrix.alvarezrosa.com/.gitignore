@@ -1,10 +1,7 @@
 .env
 
-# Runtime data + secrets stay ignored; only redacted config mirrors are tracked
-# (secret values replaced with REDACTED; restore real values from backups).
+# Config files below hold secrets — not tracked. Only secret-free files
+# (compose.yaml, log.config) are in git.
 synapse-data/*
-!synapse-data/homeserver.yaml
 !synapse-data/matrix.alvarezrosa.com.log.config
 mautrix-whatsapp/*
-!mautrix-whatsapp/config.yaml
-!mautrix-whatsapp/registration.yaml
