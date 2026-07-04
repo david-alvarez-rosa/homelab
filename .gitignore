@@ -1,14 +1,3 @@
-etc/api.env
-etc/cloudflared/*.json
-etc/dovecot/users
 etc/dovecot/private/
-etc/nginx/.htpasswd*
-etc/opendkim/keys/
-etc/letsencrypt/
-etc/wireguard/
-srv/**/.env
-srv/**/.kuma-push.env
-etc/apt/keyrings/
-etc/apt/trusted.gpg.d/
-etc/dhparam
 etc/postfix/*.db
+etc/wireguard/*.bak*

@@ -1,0 +1,11 @@
+etc/api.env filter=git-crypt diff=git-crypt
+etc/cloudflared/*.json filter=git-crypt diff=git-crypt
+etc/dovecot/users filter=git-crypt diff=git-crypt
+etc/nginx/.htpasswd* filter=git-crypt diff=git-crypt
+etc/opendkim/keys/** filter=git-crypt diff=git-crypt
+etc/wireguard/*.conf filter=git-crypt diff=git-crypt
+etc/letsencrypt/archive/** filter=git-crypt diff=git-crypt
+etc/letsencrypt/accounts/** filter=git-crypt diff=git-crypt
+srv/**/.env filter=git-crypt diff=git-crypt
+srv/**/.kuma-push.env filter=git-crypt diff=git-crypt
+etc/systemd/system/unwall.service.d/edge-cache.conf filter=git-crypt diff=git-crypt
