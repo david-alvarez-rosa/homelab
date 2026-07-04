@@ -1,1 +1,1 @@
-deb https://xpra.org/ trixie main
+deb [signed-by=/etc/apt/keyrings/xpra.gpg] https://xpra.org/ trixie main
