@@ -27,9 +27,14 @@ jobs:
           import glob, sys, yaml
           rc = 0
           for f in glob.glob("**/*.yml", recursive=True) + glob.glob("**/*.yaml", recursive=True):
+              with open(f, "rb") as fh:
+                  raw = fh.read()
+              if raw.startswith(b"\x00GITCRYPT\x00"):
+                  print(f"::notice file={f}::skipped (git-crypt encrypted)")
+                  continue
               try:
-                  list(yaml.safe_load_all(open(f)))
-              except yaml.YAMLError as e:
+                  list(yaml.safe_load_all(raw.decode("utf-8")))
+              except (yaml.YAMLError, UnicodeDecodeError) as e:
                   print(f"::error file={f}::{e}")
                   rc = 1
           sys.exit(rc)
