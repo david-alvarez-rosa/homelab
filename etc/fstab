@@ -2,4 +2,3 @@ LABEL=root_b  /          ext4  errors=remount-ro  0 1
 LABEL=EFI_B   /boot/efi  vfat  umask=0077         0 1
 LABEL=swap_b  none       swap  sw                 0 0
 LABEL=backup  /mnt/backup  ext4  defaults,noatime  0 2
-LABEL=backup  /mnt/backup  ext4  defaults,noatime  0 2

@@ -5,4 +5,4 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'nc -z -w20 ssh.alvarezrosa.com 22 || /sbin/reboot'
+ExecStart=/bin/sh -c 'for i in 1 2 3; do nc -z -w20 ssh.alvarezrosa.com 22 && exit 0; sleep 10; done; /sbin/reboot'
