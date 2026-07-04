@@ -1,0 +1,20 @@
+{
+    "default_server_config": {
+        "m.homeserver": {
+            "base_url": "https://matrix.alvarezrosa.com",
+            "server_name": "matrix.alvarezrosa.com"
+        }
+    },
+    "disable_custom_urls": true,
+    "disable_guests": true,
+    "brand": "alvarezrosa",
+    "default_country_code": "ES",
+    "show_labs_settings": false,
+    "default_theme": "light",
+    "room_directory": {
+        "servers": ["matrix.alvarezrosa.com"]
+    },
+    "setting_defaults": {
+        "breadcrumbs": true
+    }
+}
