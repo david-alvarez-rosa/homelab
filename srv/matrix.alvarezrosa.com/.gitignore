@@ -5,3 +5,8 @@
 synapse-data/*
 !synapse-data/matrix.alvarezrosa.com.log.config
 mautrix-whatsapp/*
+!synapse-data/homeserver.yaml
+!synapse-data/matrix.alvarezrosa.com.signing.key
+!synapse-data/mautrix-whatsapp-registration.yaml
+!mautrix-whatsapp/config.yaml
+!mautrix-whatsapp/registration.yaml

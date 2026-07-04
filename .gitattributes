@@ -11,3 +11,8 @@ srv/**/.kuma-push.env filter=git-crypt diff=git-crypt
 etc/systemd/system/unwall.service.d/edge-cache.conf filter=git-crypt diff=git-crypt
 etc/ssh/ssh_host_*_key filter=git-crypt diff=git-crypt
 etc/xpra/ssl/*.pem filter=git-crypt diff=git-crypt
+srv/matrix.alvarezrosa.com/mautrix-whatsapp/config.yaml filter=git-crypt diff=git-crypt
+srv/matrix.alvarezrosa.com/mautrix-whatsapp/registration.yaml filter=git-crypt diff=git-crypt
+srv/matrix.alvarezrosa.com/synapse-data/homeserver.yaml filter=git-crypt diff=git-crypt
+srv/matrix.alvarezrosa.com/synapse-data/matrix.alvarezrosa.com.signing.key filter=git-crypt diff=git-crypt
+srv/matrix.alvarezrosa.com/synapse-data/mautrix-whatsapp-registration.yaml filter=git-crypt diff=git-crypt
