@@ -6,6 +6,7 @@ services:
     environment:
       SYNAPSE_SERVER_NAME: matrix.alvarezrosa.com
       SYNAPSE_REPORT_STATS: "no"
+      PYTHONPATH: /data
     volumes:
       - ./synapse-data:/data
     ports:
