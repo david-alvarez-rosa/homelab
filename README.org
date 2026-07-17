@@ -10,6 +10,8 @@ WireGuard tunnel to a VPS bastion, and served via a global CDN.
 - nginx :: reverse proxy and static host for my sites.
 - Postfix + Dovecot + OpenDKIM :: self-hosted mail (SMTP, IMAPS, DKIM).
 - Nextcloud :: files and Talk (Docker; coturn for TURN).
+- Synapse :: Matrix homeserver with messaging bridges (Docker), used from Emacs/Element.
+- Element Web :: Matrix web client at chat.alvarezrosa.com.
 - umami :: privacy-friendly web analytics (Docker + Postgres).
 - Uptime Kuma :: public status page plus host CPU/RAM/disk/net monitors.
 - Tor :: serves the david site as a hidden service.
