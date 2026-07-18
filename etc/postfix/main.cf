@@ -19,7 +19,7 @@ mailbox_size_limit = 0
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 
-virtual_mailbox_domains = alvarezmagan.com
+virtual_mailbox_domains = alvarezmagan.com, alvarezrosa.com
 virtual_mailbox_base = /var/mail/vmail
 virtual_mailbox_maps = hash:/etc/postfix/vmailbox
 virtual_alias_maps = hash:/etc/postfix/virtual
