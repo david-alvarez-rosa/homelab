@@ -1,2 +1,2 @@
-mail._domainkey.alvarezmagan.com alvarezmagan.com:mail:/etc/opendkim/keys/alvarezmagan.com/mail.private
+s2026a._domainkey.alvarezmagan.com alvarezmagan.com:s2026a:/etc/opendkim/keys/alvarezmagan.com/s2026a.private
 s2026a._domainkey.alvarezrosa.com alvarezrosa.com:s2026a:/etc/opendkim/keys/alvarezrosa.com/s2026a.private
