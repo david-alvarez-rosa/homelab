@@ -16,5 +16,9 @@
     },
     "setting_defaults": {
         "breadcrumbs": true
+    },
+    "io.element.e2ee": {
+        "default": false,
+        "force_disable": true
     }
 }
