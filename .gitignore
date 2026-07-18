@@ -3,3 +3,4 @@ etc/postfix/*.db
 etc/wireguard/*.bak*
 srv/**/.env.bak*
 srv/**/.env.bak.*
+etc/ufw/user.rules
