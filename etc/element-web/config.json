@@ -12,7 +12,9 @@
     "show_labs_settings": false,
     "default_theme": "light",
     "room_directory": {
-        "servers": ["matrix.alvarezrosa.com"]
+        "servers": [
+            "matrix.alvarezrosa.com"
+        ]
     },
     "setting_defaults": {
         "breadcrumbs": true
@@ -20,5 +22,6 @@
     "io.element.e2ee": {
         "default": false,
         "force_disable": true
-    }
+    },
+    "custom_translations_url": "https://chat.alvarezrosa.com/custom-translations.json"
 }
