@@ -1,0 +1,2 @@
+mail.alvarezmagan.com /etc/letsencrypt/live/alvarezmagan.com/privkey.pem /etc/letsencrypt/live/alvarezmagan.com/fullchain.pem
+mail.alvarezrosa.com /etc/letsencrypt/live/alvarezrosa.com/privkey.pem /etc/letsencrypt/live/alvarezrosa.com/fullchain.pem
