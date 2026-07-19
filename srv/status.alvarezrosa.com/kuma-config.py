@@ -38,7 +38,6 @@ sites = [
     ensure("matrix.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://matrix.alvarezrosa.com/_matrix/client/versions", keyword='"versions"', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
-    ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
     ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
     ensure("recomprehension.com", type=MonitorType.HTTP, url="https://recomprehension.com", parent=g_sites, accepted_statuscodes=OK),
 ]
