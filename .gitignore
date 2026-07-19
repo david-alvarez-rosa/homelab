@@ -4,3 +4,4 @@ etc/wireguard/*.bak*
 srv/**/.env.bak*
 srv/**/.env.bak.*
 etc/ufw/user.rules
+etc/lego/

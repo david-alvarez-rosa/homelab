@@ -1,0 +1,8 @@
+[Unit]
+Description=Renew Let's Encrypt IP address certificate
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/lego run --path /etc/lego --accept-tos --email david@alvarezrosa.com --http --http.webroot /var/www/acme --domains 213.32.19.229 --profile shortlived --deploy-hook "systemctl reload nginx"
