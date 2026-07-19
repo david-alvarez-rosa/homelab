@@ -1,5 +1,5 @@
 import os
-from uptime_kuma_api import UptimeKumaApi, MonitorType
+from uptime_kuma_api import UptimeKumaApi, MonitorType, NotificationType
 
 URL = "http://127.0.0.1:3011"
 USER = os.environ["KUMA_USER"]
@@ -11,10 +11,27 @@ api = UptimeKumaApi(URL)
 api.login(USER, PW)
 existing = {m["name"]: m["id"] for m in api.get_monitors()}
 
+NOTIFY = "Email — david@alvarezrosa.com"
+notifications = {n["name"]: n["id"] for n in api.get_notifications()}
+if NOTIFY not in notifications:
+    notifications[NOTIFY] = api.add_notification(
+        name=NOTIFY,
+        type=NotificationType.SMTP,
+        isDefault=True,
+        applyExisting=True,
+        smtpHost="host.docker.internal",
+        smtpPort=25,
+        smtpSecure="",
+        smtpIgnoreTLSError=True,
+        smtpFrom="Uptime Kuma <kuma@alvarezrosa.com>",
+        smtpTo="david@alvarezrosa.com",
+    )["id"]
+
 def ensure(name, **kw):
     if name in existing:
         return existing[name]
     kw.setdefault("interval", 1800)
+    kw.setdefault("notificationIDList", [notifications[NOTIFY]])
     existing[name] = api.add_monitor(name=name, **kw)["monitorID"]
     return existing[name]
 
