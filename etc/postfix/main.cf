@@ -7,7 +7,7 @@ mydestination = $myhostname, localhost.$mydomain, localhost
 smtpd_banner = $myhostname ESMTP $mail_name (Debian)
 
 inet_interfaces = all
-inet_protocols = all
+inet_protocols = ipv4
 smtp_bind_address = 10.0.0.2
 
 mynetworks_style = host
