@@ -38,6 +38,7 @@ sites = [
     ensure("matrix.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://matrix.alvarezrosa.com/_matrix/client/versions", keyword='"versions"', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
+    ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
     ensure("recomprehension.com", type=MonitorType.HTTP, url="https://recomprehension.com", parent=g_sites, accepted_statuscodes=OK),
 ]
@@ -51,6 +52,8 @@ mail = [
     ensure("Mail — IMAP", type=MonitorType.PORT, hostname="host.docker.internal", port=993, parent=g_mail),
 ]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
+infra.append(ensure("ssh.alvarezrosa.com", type=MonitorType.PORT, hostname="ssh.alvarezrosa.com", port=22, parent=g_infra))
+infra.append(ensure("tunnel.alvarezrosa.com", type=MonitorType.HTTP, url="https://tunnel.alvarezrosa.com", parent=g_infra, accepted_statuscodes=["200-299", "404"]))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
