@@ -39,6 +39,9 @@ sites = [
     ensure("cloud.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezrosa.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
+    ensure("meet.alvarezrosa.com", type=MonitorType.HTTP, url="https://meet.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
+    ensure("mail.alvarezmagan.com", type=MonitorType.HTTP, url="https://mail.alvarezmagan.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
+    ensure("meet.alvarezmagan.com", type=MonitorType.HTTP, url="https://meet.alvarezmagan.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
     ensure("recomprehension.com", type=MonitorType.HTTP, url="https://recomprehension.com", parent=g_sites, accepted_statuscodes=OK),
 ]
@@ -56,6 +59,7 @@ infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", p
 infra.append(ensure("ssh.alvarezrosa.com", type=MonitorType.PORT, hostname="ssh.alvarezrosa.com", port=22, parent=g_infra))
 infra.append(ensure("tunnel.alvarezrosa.com", type=MonitorType.HTTP, url="https://tunnel.alvarezrosa.com", parent=g_infra, accepted_statuscodes=["200-299", "404"]))
 infra.append(ensure("Talk TURN (coturn)", type=MonitorType.PORT, hostname="host.docker.internal", port=3478, parent=g_infra))
+infra.append(ensure("talk.alvarezrosa.com (TURN)", type=MonitorType.PORT, hostname="talk.alvarezrosa.com", port=3478, parent=g_infra))
 infra.append(ensure("GitHub runner", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("fail2ban", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
