@@ -40,8 +40,10 @@ sites = [
     ensure("cloud.alvarezmagan.com", type=MonitorType.KEYWORD, url="https://cloud.alvarezmagan.com/status.php", keyword='"installed":true', parent=g_sites, accepted_statuscodes=OK),
     ensure("mail.alvarezrosa.com", type=MonitorType.HTTP, url="https://mail.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("meet.alvarezrosa.com", type=MonitorType.HTTP, url="https://meet.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
+    ensure("share.alvarezrosa.com", type=MonitorType.HTTP, url="https://share.alvarezrosa.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("mail.alvarezmagan.com", type=MonitorType.HTTP, url="https://mail.alvarezmagan.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("meet.alvarezmagan.com", type=MonitorType.HTTP, url="https://meet.alvarezmagan.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
+    ensure("share.alvarezmagan.com", type=MonitorType.HTTP, url="https://share.alvarezmagan.com", parent=g_sites, maxredirects=0, accepted_statuscodes=["301"]),
     ensure("beta.alvarezrosa.com", type=MonitorType.HTTP, url="https://beta.alvarezrosa.com", parent=g_sites, accepted_statuscodes=["200-299", "401"]),
     ensure("recomprehension.com", type=MonitorType.HTTP, url="https://recomprehension.com", parent=g_sites, accepted_statuscodes=OK),
 ]
@@ -56,7 +58,8 @@ mail = [
     ensure("Mail — rspamd", type=MonitorType.PUSH, parent=g_mail),
 ]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
-infra.append(ensure("ssh.alvarezrosa.com", type=MonitorType.PORT, hostname="ssh.alvarezrosa.com", port=22, parent=g_infra))
+infra.append(ensure("ssh.alvarezrosa.com", type=MonitorType.PORT, hostname="ssh.alvarezrosa.com", port=22, parent=g_infra, url="ssh://ssh.alvarezrosa.com"))
+api.edit_monitor(existing["ssh.alvarezrosa.com"], url="ssh://ssh.alvarezrosa.com")
 infra.append(ensure("tunnel.alvarezrosa.com", type=MonitorType.HTTP, url="https://tunnel.alvarezrosa.com", parent=g_infra, accepted_statuscodes=["200-299", "404"]))
 infra.append(ensure("Talk TURN (coturn)", type=MonitorType.PORT, hostname="host.docker.internal", port=3478, parent=g_infra))
 infra.append(ensure("talk.alvarezrosa.com (TURN)", type=MonitorType.PORT, hostname="talk.alvarezrosa.com", port=3478, parent=g_infra))
@@ -66,6 +69,9 @@ infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
 host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU (% used)", "RAM (% used)", "Disk (% used)", "Ethernet (GB)")]
+
+def entries(ids):
+    return [{"id": i, "sendUrl": True} for i in ids]
 
 if SLUG not in {p["slug"] for p in api.get_status_pages()}:
     api.add_status_page(SLUG, TITLE)
@@ -81,10 +87,10 @@ api.save_status_page(
     footerText="Free as in freedom",
     customCSS="body {\n  \n}\n",
     publicGroupList=[
-        {"name": "Sites", "monitorList": [{"id": i} for i in sites]},
-        {"name": "APIs", "monitorList": [{"id": i} for i in apis]},
-        {"name": "Mail", "monitorList": [{"id": i} for i in mail]},
-        {"name": "Infrastructure", "monitorList": [{"id": i} for i in infra + host]},
+        {"name": "Sites", "monitorList": entries(sites)},
+        {"name": "APIs", "monitorList": entries(apis)},
+        {"name": "Mail", "monitorList": entries(mail)},
+        {"name": "Infrastructure", "monitorList": entries(infra + host)},
     ],
 )
 print("done:", TITLE)
