@@ -49,6 +49,7 @@ sites = [
     ensure("david.alvarezrosa.com", type=MonitorType.HTTP, url="https://david.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
     ensure("dhevt6e4rtgbtr3jh53xrpwmgtilkah6nyjujocsspssrsexc7omxhid.onion", type=MonitorType.HTTP, url="http://host.docker.internal:8080", parent=g_sites, accepted_statuscodes=OK, headers='{"Host": "dhevt6e4rtgbtr3jh53xrpwmgtilkah6nyjujocsspssrsexc7omxhid.onion"}'),
     ensure("david.alvarezrosa.com/tres-en-raya", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/tres-en-raya/", parent=g_sites, accepted_statuscodes=OK),
+    ensure("david.alvarezrosa.com/dn", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/dn/", parent=g_sites, accepted_statuscodes=OK),
     ensure("david.alvarezrosa.com/pasatiempos-dn", type=MonitorType.HTTP, url="https://david.alvarezrosa.com/pasatiempos-dn/", parent=g_sites, accepted_statuscodes=OK),
     ensure("analytics.alvarezrosa.com", type=MonitorType.HTTP, url="https://analytics.alvarezrosa.com", parent=g_sites, accepted_statuscodes=OK),
     ensure("chat.alvarezrosa.com", type=MonitorType.KEYWORD, url="https://chat.alvarezrosa.com/", keyword="<title>Element</title>", parent=g_sites, accepted_statuscodes=OK),
