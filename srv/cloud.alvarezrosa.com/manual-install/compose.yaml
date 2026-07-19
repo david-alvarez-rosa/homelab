@@ -317,6 +317,7 @@ services:
       - AIO_LOG_LEVEL
       - TZ=${TIMEZONE}
       - TALK_PORT
+      - TURN_DOMAIN
       - INTERNAL_SECRET=${TALK_INTERNAL_SECRET}
     restart: unless-stopped
     profiles:
