@@ -97,6 +97,8 @@ services:
       - NET_RAW
 
   nextcloud-aio-nextcloud:
+    extra_hosts:
+      - "mail.alvarezrosa.com:172.19.0.1"
     depends_on:
       nextcloud-aio-database:
         condition: service_started
