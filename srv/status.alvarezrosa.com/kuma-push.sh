@@ -65,3 +65,17 @@ push_eth() {
 }
 
 push_eth
+
+push_service() {
+  local token="$1" unit="$2" status="down" state
+  [ -z "$token" ] && return 0
+  state=$(systemctl is-active "$unit" 2>/dev/null || true)
+  [ "$state" = "active" ] && status="up"
+  curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
+    --data-urlencode "status=$status" \
+    --data-urlencode "msg=$unit $state" || true
+}
+
+push_service "${RSPAMD_TOKEN:-}"   rspamd
+push_service "${RUNNER_TOKEN:-}"   github-runner
+push_service "${FAIL2BAN_TOKEN:-}" fail2ban

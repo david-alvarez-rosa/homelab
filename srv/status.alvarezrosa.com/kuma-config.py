@@ -50,10 +50,14 @@ mail = [
     ensure("Mail — Inbound (SMTP)", type=MonitorType.PORT, hostname="host.docker.internal", port=25, parent=g_mail),
     ensure("Mail — Submission", type=MonitorType.PORT, hostname="host.docker.internal", port=465, parent=g_mail),
     ensure("Mail — IMAP", type=MonitorType.PORT, hostname="host.docker.internal", port=993, parent=g_mail),
+    ensure("Mail — rspamd", type=MonitorType.PUSH, parent=g_mail),
 ]
 infra = [ensure("SSH", type=MonitorType.PORT, hostname="host.docker.internal", port=22, parent=g_infra)]
 infra.append(ensure("ssh.alvarezrosa.com", type=MonitorType.PORT, hostname="ssh.alvarezrosa.com", port=22, parent=g_infra))
 infra.append(ensure("tunnel.alvarezrosa.com", type=MonitorType.HTTP, url="https://tunnel.alvarezrosa.com", parent=g_infra, accepted_statuscodes=["200-299", "404"]))
+infra.append(ensure("Talk TURN (coturn)", type=MonitorType.PORT, hostname="host.docker.internal", port=3478, parent=g_infra))
+infra.append(ensure("GitHub runner", type=MonitorType.PUSH, parent=g_infra))
+infra.append(ensure("fail2ban", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
