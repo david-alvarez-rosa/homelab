@@ -28,3 +28,4 @@ virtual   unix  -       n       n       -       -       virtual
 anvil     unix  -       -       y       -       1       anvil
 scache    unix  -       -       y       -       1       scache
 postlog   unix-dgram n  -       n       -       1       postlogd
+lmtp       unix  -       -       n       -       -       lmtp

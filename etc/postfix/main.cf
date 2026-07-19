@@ -42,6 +42,9 @@ smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_un
 
 milter_default_action = accept
 milter_protocol = 6
-smtpd_milters = inet:127.0.0.1:12301
+smtpd_milters = inet:127.0.0.1:12301 inet:127.0.0.1:11332
 non_smtpd_milters = inet:127.0.0.1:12301
 tls_server_sni_maps = hash:/etc/postfix/sni
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+lmtp_host_lookup = native
+smtpd_authorized_xclient_hosts = 
