@@ -99,6 +99,9 @@ services:
   nextcloud-aio-nextcloud:
     extra_hosts:
       - "mail.alvarezrosa.com:172.19.0.1"
+      - "mail.alvarezmagan.com:172.19.0.1"
+      - "cloud.alvarezrosa.com:172.19.0.1"
+      - "cloud.alvarezmagan.com:172.19.0.1"
     depends_on:
       nextcloud-aio-database:
         condition: service_started
@@ -206,6 +209,9 @@ services:
       - NET_RAW
 
   nextcloud-aio-notify-push:
+    extra_hosts:
+      - "cloud.alvarezrosa.com:172.19.0.1"
+      - "cloud.alvarezmagan.com:172.19.0.1"
     image: ghcr.io/nextcloud-releases/aio-notify-push:latest
     user: "33"
     init: true
