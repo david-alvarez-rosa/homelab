@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch resolv.conf for postfix chroot sync
+
+[Path]
+PathChanged=/etc/resolv.conf
+PathModified=/etc/resolv.conf
+Unit=postfix-chroot-resolv.service
+
+[Install]
+WantedBy=multi-user.target

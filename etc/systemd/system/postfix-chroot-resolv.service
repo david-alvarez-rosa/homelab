@@ -1,0 +1,12 @@
+[Unit]
+Description=Sync resolv.conf into postfix chroot
+ConditionPathIsDirectory=/var/spool/postfix/etc
+After=postfix.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/bin/cp /etc/resolv.conf /var/spool/postfix/etc/resolv.conf
+
+[Install]
+WantedBy=multi-user.target
