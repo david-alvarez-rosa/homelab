@@ -29,8 +29,8 @@ virtual_gid_maps = static:5000
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 
-smtpd_tls_cert_file = /etc/letsencrypt/live/alvarezmagan.com/fullchain.pem
-smtpd_tls_key_file = /etc/letsencrypt/live/alvarezmagan.com/privkey.pem
+smtpd_tls_cert_file = /etc/letsencrypt/live/alvarezrosa.com/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/alvarezrosa.com/privkey.pem
 smtpd_tls_security_level = may
 smtp_tls_security_level = may
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
