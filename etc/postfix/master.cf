@@ -5,6 +5,7 @@ submissions inet n      -       n       -       -       smtpd
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_recipient_restrictions=permit_sasl_authenticated,reject
   -o milter_macro_daemon_name=ORIGINATING
+  -o cleanup_service_name=subcleanup
 pickup    unix  n       -       y       60      1       pickup
 cleanup   unix  n       -       y       -       0       cleanup
 qmgr      unix  n       -       n       300     1       qmgr
@@ -29,3 +30,7 @@ anvil     unix  -       -       y       -       1       anvil
 scache    unix  -       -       y       -       1       scache
 postlog   unix-dgram n  -       n       -       1       postlogd
 lmtp       unix  -       -       n       -       -       lmtp
+
+subcleanup unix n       -       y       -       0       cleanup
+  -o syslog_name=postfix/subcleanup
+  -o header_checks=regexp:/etc/postfix/submission_header_checks
