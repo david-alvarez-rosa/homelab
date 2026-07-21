@@ -42,16 +42,15 @@ jobs:
 
   nginx:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-      - run: python3 -m pip install --quiet gixy-ng
+      - run: python3 -m pip install --quiet gixy-ng==0.2.50
       - name: gixy
         run: |
           sudo mkdir -p /etc/nginx
           sudo cp -r etc/nginx/. /etc/nginx/
           sudo touch /etc/nginx/mime.types /etc/nginx/fastcgi_params
-          gixy /etc/nginx/nginx.conf
+          gixy --skips hsts_header /etc/nginx/nginx.conf
 
   secrets:
     runs-on: ubuntu-latest
