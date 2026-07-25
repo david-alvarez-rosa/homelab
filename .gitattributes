@@ -18,3 +18,4 @@ srv/matrix.alvarezrosa.com/synapse-data/matrix.alvarezrosa.com.signing.key filte
 srv/matrix.alvarezrosa.com/synapse-data/mautrix-whatsapp-registration.yaml filter=git-crypt diff=git-crypt
 etc/postfix/sni.db filter=git-crypt diff=git-crypt
 var/lib/znc/configs/znc.conf filter=git-crypt diff=git-crypt
+var/lib/znc/users/**/moddata/sasl/.registry filter=git-crypt diff=git-crypt
