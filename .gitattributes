@@ -17,3 +17,4 @@ srv/matrix.alvarezrosa.com/synapse-data/homeserver.yaml filter=git-crypt diff=gi
 srv/matrix.alvarezrosa.com/synapse-data/matrix.alvarezrosa.com.signing.key filter=git-crypt diff=git-crypt
 srv/matrix.alvarezrosa.com/synapse-data/mautrix-whatsapp-registration.yaml filter=git-crypt diff=git-crypt
 etc/postfix/sni.db filter=git-crypt diff=git-crypt
+var/lib/znc/configs/znc.conf filter=git-crypt diff=git-crypt

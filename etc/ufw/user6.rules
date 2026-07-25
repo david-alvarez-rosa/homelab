@@ -40,6 +40,9 @@
 ### tuple ### allow tcp 465 ::/0 any ::/0 in comment=736d7470207375626d697373696f6e2028696d706c6963697420544c5329
 -A ufw6-user-input -p tcp --dport 465 -j ACCEPT
 
+### tuple ### allow tcp 6697 ::/0 any ::/0 in comment=7a6e632069726320626f756e6365722028746c7329
+-A ufw6-user-input -p tcp --dport 6697 -j ACCEPT
+
 ### END RULES ###
 
 ### LOGGING ###
