@@ -30,6 +30,9 @@ if NOTIFY not in notifications:
 def ensure(name, **kw):
     if name in existing:
         return existing[name]
+    if kw.get("type") in (MonitorType.HTTP, MonitorType.KEYWORD):
+        kw.setdefault("interval", 300)
+        kw.setdefault("maxretries", 3)
     kw.setdefault("interval", 1800)
     kw.setdefault("notificationIDList", [notifications[NOTIFY]])
     existing[name] = api.add_monitor(name=name, **kw)["monitorID"]
