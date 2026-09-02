@@ -49,3 +49,5 @@ virtual_transport = lmtp:unix:private/dovecot-lmtp
 lmtp_host_lookup = native
 smtpd_authorized_xclient_hosts = 
 message_size_limit = 31457280
+bulk_destination_concurrency_limit = 1
+bulk_destination_rate_delay = 60s

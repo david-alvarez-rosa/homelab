@@ -34,3 +34,6 @@ lmtp       unix  -       -       n       -       -       lmtp
 subcleanup unix n       -       y       -       0       cleanup
   -o syslog_name=postfix/subcleanup
   -o header_checks=regexp:/etc/postfix/submission_header_checks
+
+bulk      unix  -       -       n       -       -       smtp
+  -o syslog_name=postfix/bulk
