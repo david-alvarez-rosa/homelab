@@ -1,0 +1,6 @@
+[Unit]
+Description=Ingest WhatsApp backup and recover view-once media into Matrix
+
+[Service]
+Type=oneshot
+ExecStart=/opt/wa-viewonce/ingest-all.sh

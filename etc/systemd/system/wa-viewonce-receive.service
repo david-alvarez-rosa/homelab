@@ -1,0 +1,11 @@
+[Unit]
+Description=WhatsApp backup upload endpoint for view-once recovery
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/wa-viewonce/receive.py
+Restart=on-failure
+PrivateTmp=no
+
+[Install]
+WantedBy=multi-user.target
