@@ -20,4 +20,3 @@ etc/postfix/sni.db filter=git-crypt diff=git-crypt
 var/lib/znc/configs/znc.conf filter=git-crypt diff=git-crypt
 var/lib/znc/users/**/moddata/sasl/.registry filter=git-crypt diff=git-crypt
 etc/wa-viewonce.conf filter=git-crypt diff=git-crypt
-var/lib/syncthing/config/config.xml filter=git-crypt diff=git-crypt

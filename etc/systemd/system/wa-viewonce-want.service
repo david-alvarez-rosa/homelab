@@ -1,0 +1,6 @@
+[Unit]
+Description=Recompute whether a WhatsApp backup is needed for view-once recovery
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/wa-viewonce/want.py
