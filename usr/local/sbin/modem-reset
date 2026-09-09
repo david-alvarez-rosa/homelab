@@ -1,0 +1,51 @@
+#!/bin/sh
+set -e
+IF=enx001e101f0000
+GW=192.168.8.1
+C=$(mktemp)
+trap 'rm -f "$C"' EXIT
+
+usbdev() {
+    for d in /sys/bus/usb/devices/[0-9]*-[0-9]*; do
+        [ "$(cat "$d/idVendor" 2>/dev/null)" = "12d1" ] && { basename "$d"; return; }
+    done
+}
+
+tok() {
+    curl -s -c "$C" --max-time 8 "http://$GW/api/webserver/SesTokInfo" \
+        | tr -d "\n" | sed -e "s/.*<TokInfo>//" -e "s|</TokInfo>.*||"
+}
+
+api() {
+    curl -s -b "$C" --max-time 8 -H "__RequestVerificationToken: $(tok)" "http://$GW/api/$1" | tr -d "\n"
+}
+
+field() {
+    sed -e "s/.*<$1>//" -e "s|</$1>.*||"
+}
+
+replug() {
+    D=$(usbdev)
+    [ -n "$D" ] || { echo "no huawei modem on usb" >&2; exit 1; }
+    echo 0 > "/sys/bus/usb/devices/$D/authorized"
+    sleep 6
+    echo 1 > "/sys/bus/usb/devices/$D/authorized"
+    n=0
+    while [ $n -lt 20 ]; do
+        sleep 3
+        ip link show "$IF" >/dev/null 2>&1 && break
+        n=$((n + 1))
+    done
+    sleep 25
+}
+
+if [ "$1" != "-f" ] && ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1; then
+    echo "modem responsive, use -f to reset anyway"
+else
+    replug
+    ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1 || { echo "modem still unreachable" >&2; exit 1; }
+fi
+
+echo "wan:    $(api device/information | field WanIPAddress)"
+echo "status: $(api monitoring/status | field ConnectionStatus)"
+echo "egress: $(curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip)"
