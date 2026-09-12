@@ -24,7 +24,7 @@ class KeepWhatsAppMessages:
 
     async def check_event_allowed(self, event, state_events):
         try:
-            if event.type == "m.room.redaction" and event.sender.startswith("@whatsapp"):
+            if event.type == "m.room.redaction" and self._from_whatsapp(event):
                 logger.info(
                     "keep_whatsapp: blocking redaction %s of %s from %s in %s",
                     event.event_id, event.redacts, event.sender, event.room_id,
@@ -59,6 +59,7 @@ class KeepWhatsAppMessages:
                     "msgtype": "m.notice",
                     "body": DELETED_MARK,
                     "m.relates_to": {"m.in_reply_to": {"event_id": target_id}},
+                    DOUBLE_PUPPET: "mautrix-whatsapp",
                 },
             })
             logger.info("keep_whatsapp: marked %s as deleted in %s", target_id, room_id)
