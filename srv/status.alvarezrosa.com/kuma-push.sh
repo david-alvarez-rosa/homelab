@@ -7,6 +7,7 @@ DISK_MOUNT="/"
 CPU_MAX=90
 RAM_MAX=90
 DISK_MAX=90
+TEMP_MAX=90
 ETH_STATE="/var/lib/kuma-push/eth.last"
 
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
@@ -25,19 +26,31 @@ ram=$(( (100 * (mt - ma)) / mt ))
 
 disk=$(df --output=pcent "$DISK_MOUNT" | tail -1 | tr -dc '0-9')
 
+temp=0
+hw=$(grep -lx k10temp /sys/class/hwmon/hwmon*/name 2>/dev/null | head -1 || true)
+if [ -n "$hw" ]; then
+  sum=0
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    sum=$(( sum + $(cat "${hw%/name}/temp1_input") ))
+    sleep 1
+  done
+  temp=$(( sum / 10000 ))
+fi
+
 push() {
-  local token="$1" val="$2" max="$3" status="up"
+  local token="$1" val="$2" max="$3" unit="${4:-%}" status="up"
   [ -z "$token" ] && return 0
   [ "$val" -ge "$max" ] && status="down"
   curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
     --data-urlencode "status=$status" \
-    --data-urlencode "msg=${val}%" \
+    --data-urlencode "msg=${val}${unit}" \
     --data-urlencode "ping=$val" || true
 }
 
 push "${CPU_TOKEN:-}"  "$cpu"  "$CPU_MAX"
 push "${RAM_TOKEN:-}"  "$ram"  "$RAM_MAX"
 push "${DISK_TOKEN:-}" "$disk" "$DISK_MAX"
+[ "$temp" -gt 0 ] && push "${TEMP_TOKEN:-}" "$temp" "$TEMP_MAX" "°C"
 
 push_eth() {
   local token="${ETH_TOKEN:-}" iface="${ETH_IFACE:-}" rx tx cur last delta gb
