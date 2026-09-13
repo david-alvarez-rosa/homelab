@@ -93,7 +93,7 @@ infra.append(ensure("fail2ban", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
-host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU (% used)", "RAM (% used)", "Disk (% used)", "CPU temp (°C)", "Ethernet (GB)")]
+host = [ensure(label, type=MonitorType.PUSH, parent=g_infra) for label in ("CPU (% used)", "RAM (% used)", "Disk (% used)", "CPU temp (°C)", "Ethernet (GB)", "LTE modem (GB)")]
 
 def entries(ids):
     return [{"id": i, "sendUrl": True} for i in ids]

@@ -9,6 +9,7 @@ RAM_MAX=90
 DISK_MAX=90
 TEMP_MAX=90
 ETH_STATE="/var/lib/kuma-push/eth.last"
+MODEM_STATE="/var/lib/kuma-push/modem.last"
 
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
 
@@ -52,16 +53,16 @@ push "${RAM_TOKEN:-}"  "$ram"  "$RAM_MAX"
 push "${DISK_TOKEN:-}" "$disk" "$DISK_MAX"
 [ "$temp" -gt 0 ] && push "${TEMP_TOKEN:-}" "$temp" "$TEMP_MAX" "°C"
 
-push_eth() {
-  local token="${ETH_TOKEN:-}" iface="${ETH_IFACE:-}" rx tx cur last delta gb
+push_net() {
+  local token="$1" iface="$2" state="$3" rx tx cur last delta gb
   [ -z "$token" ] && return 0
   [ -z "$iface" ] && return 0
   [ -r "/sys/class/net/$iface/statistics/rx_bytes" ] || return 0
   rx=$(cat "/sys/class/net/$iface/statistics/rx_bytes")
   tx=$(cat "/sys/class/net/$iface/statistics/tx_bytes")
   cur=$(( rx + tx ))
-  mkdir -p "$(dirname "$ETH_STATE")"
-  last=$(cat "$ETH_STATE" 2>/dev/null || echo "")
+  mkdir -p "$(dirname "$state")"
+  last=$(cat "$state" 2>/dev/null || echo "")
   if [ -z "$last" ]; then
     delta=0
   elif [ "$cur" -lt "$last" ]; then
@@ -69,7 +70,7 @@ push_eth() {
   else
     delta=$(( cur - last ))
   fi
-  echo "$cur" > "$ETH_STATE"
+  echo "$cur" > "$state"
   gb=$(awk -v b="$delta" 'BEGIN{g=b/1073741824; if(g<0.001)g=0.001; printf "%.3f", g}')
   curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
     --data-urlencode "status=up" \
@@ -77,7 +78,8 @@ push_eth() {
     --data-urlencode "ping=$gb" || true
 }
 
-push_eth
+push_net "${ETH_TOKEN:-}" "${ETH_IFACE:-}" "$ETH_STATE"
+push_net "${MODEM_TOKEN:-}" "${MODEM_IFACE:-}" "$MODEM_STATE"
 
 push_service() {
   local token="$1" unit="$2" status="down" state
