@@ -17,7 +17,8 @@
         ]
     },
     "setting_defaults": {
-        "breadcrumbs": true
+        "breadcrumbs": true,
+        "RoomList.showPeopleSection": false
     },
     "io.element.e2ee": {
         "default": false,
