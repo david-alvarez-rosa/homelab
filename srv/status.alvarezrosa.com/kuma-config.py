@@ -42,6 +42,7 @@ g_sites = ensure("Sites", type=MonitorType.GROUP)
 g_api = ensure("APIs", type=MonitorType.GROUP)
 g_mail = ensure("Mail", type=MonitorType.GROUP)
 g_infra = ensure("Infrastructure", type=MonitorType.GROUP)
+g_mirrors = ensure("Mirrors", type=MonitorType.GROUP)
 
 OK = ["200-299"]
 API = ["200-299", "400-499"]
@@ -73,6 +74,12 @@ sites = [
 apis = [
     ensure("api.alvarezrosa.com", type=MonitorType.HTTP, url="https://api.alvarezrosa.com", parent=g_api, accepted_statuscodes=API),
     ensure("api.unwall.app", type=MonitorType.HTTP, url="https://api.unwall.app", parent=g_api, accepted_statuscodes=API),
+]
+mirrors = [
+    ensure("direct.unwall.app", type=MonitorType.HTTP, url="https://direct.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("live.direct.unwall.app", type=MonitorType.HTTP, url="https://live.direct.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("api.direct.unwall.app", type=MonitorType.HTTP, url="https://api.direct.unwall.app", parent=g_mirrors, accepted_statuscodes=API),
+    ensure("david.direct.alvarezrosa.com", type=MonitorType.HTTP, url="https://david.direct.alvarezrosa.com", parent=g_mirrors, accepted_statuscodes=OK),
 ]
 mail = [
     ensure("Mail — Inbound (SMTP)", type=MonitorType.PORT, hostname="host.docker.internal", port=25, parent=g_mail),
@@ -114,6 +121,7 @@ api.save_status_page(
     publicGroupList=[
         {"name": "Sites", "monitorList": entries(sites)},
         {"name": "APIs", "monitorList": entries(apis)},
+        {"name": "Mirrors", "monitorList": entries(mirrors)},
         {"name": "Mail", "monitorList": entries(mail)},
         {"name": "Infrastructure", "monitorList": entries(infra + host)},
     ],
