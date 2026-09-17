@@ -77,9 +77,9 @@ apis = [
 ]
 mirrors = [
     ensure("direct.unwall.app", type=MonitorType.HTTP, url="https://direct.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
-    ensure("live.direct.unwall.app", type=MonitorType.HTTP, url="https://live.direct.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
-    ensure("api.direct.unwall.app", type=MonitorType.HTTP, url="https://api.direct.unwall.app", parent=g_mirrors, accepted_statuscodes=API),
-    ensure("david.direct.alvarezrosa.com", type=MonitorType.HTTP, url="https://david.direct.alvarezrosa.com", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("direct.live.unwall.app", type=MonitorType.HTTP, url="https://direct.live.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("direct.api.unwall.app", type=MonitorType.KEYWORD, url="https://direct.api.unwall.app/bootstrap", keyword="{", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("direct.david.alvarezrosa.com", type=MonitorType.HTTP, url="https://direct.david.alvarezrosa.com", parent=g_mirrors, accepted_statuscodes=OK),
 ]
 mail = [
     ensure("Mail — Inbound (SMTP)", type=MonitorType.PORT, hostname="host.docker.internal", port=25, parent=g_mail),
