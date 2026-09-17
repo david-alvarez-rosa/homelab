@@ -76,7 +76,7 @@ apis = [
     ensure("api.unwall.app", type=MonitorType.HTTP, url="https://api.unwall.app", parent=g_api, accepted_statuscodes=API),
 ]
 mirrors = [
-    ensure("direct.unwall.app", type=MonitorType.HTTP, url="https://direct.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
+    ensure("direct.unwall.app", type=MonitorType.KEYWORD, url="https://direct.unwall.app", keyword="direct.api.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
     ensure("direct.live.unwall.app", type=MonitorType.HTTP, url="https://direct.live.unwall.app", parent=g_mirrors, accepted_statuscodes=OK),
     ensure("direct.api.unwall.app", type=MonitorType.KEYWORD, url="https://direct.api.unwall.app/bootstrap", keyword="{", parent=g_mirrors, accepted_statuscodes=OK),
     ensure("direct.david.alvarezrosa.com", type=MonitorType.HTTP, url="https://direct.david.alvarezrosa.com", parent=g_mirrors, accepted_statuscodes=OK),
