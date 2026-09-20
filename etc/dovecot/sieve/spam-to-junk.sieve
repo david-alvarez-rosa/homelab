@@ -1,6 +1,6 @@
 require ["fileinto", "mailbox"];
 if header :contains "Subject" "Report Domain:" {
-  fileinto :create "DMARC";
+  fileinto :create "Archive";
   stop;
 }
 if header :contains "X-Spam" "Yes" {

@@ -11,12 +11,14 @@ import zipfile
 
 STATE = "/var/lib/dmarc-check/last"
 RECIPIENT = "david@alvarezrosa.com"
-MAILDIRS = ("/var/mail/vmail/*/*/.DMARC/new/*", "/var/mail/vmail/*/*/.DMARC/cur/*")
+MAILDIRS = ("/var/mail/vmail/*/*/.Archive/new/*", "/var/mail/vmail/*/*/.Archive/cur/*")
 
 
 def payloads(path):
     with open(path, "rb") as handle:
         message = email.message_from_binary_file(handle)
+    if "report domain:" not in str(message.get("Subject") or "").lower():
+        return
     for part in message.walk():
         name = (part.get_filename() or "").lower()
         data = part.get_payload(decode=True)
