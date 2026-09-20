@@ -12,8 +12,10 @@ WireGuard tunnel to a VPS bastion, and served via a global CDN.
 - Nextcloud :: files and Talk (Docker; coturn for TURN).
 - Synapse :: Matrix homeserver with messaging bridges (Docker), used from Emacs/Element.
 - Element Web :: Matrix web client at chat.alvarezrosa.com.
+- ZNC :: IRC bouncer at irc.alvarezrosa.com, keeping me connected to Libera.
 - umami :: privacy-friendly web analytics (Docker + Postgres).
 - Uptime Kuma :: public status page plus host CPU/RAM/disk/net monitors.
+- vnstat :: per-interface traffic accounting for the wired and LTE links.
 - Tor :: serves the david site as a hidden service.
 - cloudflared :: backup SSH tunnel, in case the WireGuard path is down.
 - microsocks :: SOCKS5 proxy egressing through an isolated LTE modem.
