@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+import email
+import glob
+import gzip
+import io
+import os
+import subprocess
+import time
+import xml.etree.ElementTree as ET
+import zipfile
+
+STATE = "/var/lib/dmarc-check/last"
+RECIPIENT = "david@alvarezrosa.com"
+MAILDIRS = ("/var/mail/vmail/*/*/.DMARC/new/*", "/var/mail/vmail/*/*/.DMARC/cur/*")
+
+
+def payloads(path):
+    with open(path, "rb") as handle:
+        message = email.message_from_binary_file(handle)
+    for part in message.walk():
+        name = (part.get_filename() or "").lower()
+        data = part.get_payload(decode=True)
+        if not data:
+            continue
+        if name.endswith(".gz"):
+            yield gzip.decompress(data)
+        elif name.endswith(".zip"):
+            with zipfile.ZipFile(io.BytesIO(data)) as archive:
+                for inner in archive.namelist():
+                    yield archive.read(inner)
+        elif name.endswith(".xml"):
+            yield data
+
+
+def failures(blob):
+    root = ET.fromstring(blob)
+    org = root.findtext("report_metadata/org_name", "?")
+    domain = root.findtext("policy_published/domain", "?")
+    found = []
+    for record in root.findall("record"):
+        evaluated = record.find("row/policy_evaluated")
+        if evaluated is None:
+            continue
+        dkim = (evaluated.findtext("dkim") or "").lower()
+        spf = (evaluated.findtext("spf") or "").lower()
+        disposition = (evaluated.findtext("disposition") or "none").lower()
+        if disposition == "none" and (dkim == "pass" or spf == "pass"):
+            continue
+        found.append(
+            "%s via %s: %s msg(s) from %s header_from=%s dkim=%s spf=%s disposition=%s"
+            % (
+                domain,
+                org,
+                record.findtext("row/count", "?"),
+                record.findtext("row/source_ip", "?"),
+                record.findtext("identifiers/header_from", "?"),
+                dkim or "none",
+                spf or "none",
+                disposition,
+            )
+        )
+    return found
+
+
+def main():
+    started = time.time()
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    since = os.path.getmtime(STATE) if os.path.exists(STATE) else 0
+    lines = []
+    paths = [path for pattern in MAILDIRS for path in glob.glob(pattern)]
+    for path in paths:
+        if os.path.getmtime(path) <= since:
+            continue
+        try:
+            for blob in payloads(path):
+                lines.extend(failures(blob))
+        except Exception as error:
+            lines.append("unparsed %s: %s" % (os.path.basename(path), error))
+    with open(STATE, "w"):
+        pass
+    os.utime(STATE, (started, started))
+    if not lines:
+        return
+    body = "To: %s\nSubject: DMARC failures (%d)\n\n%s\n" % (
+        RECIPIENT,
+        len(lines),
+        "\n".join(lines),
+    )
+    subprocess.run(["/usr/sbin/sendmail", "-t"], input=body.encode(), check=True)
+
+
+main()

@@ -1,0 +1,7 @@
+[Unit]
+Description=Report DMARC aggregate failures
+After=dovecot.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/dmarc-check
