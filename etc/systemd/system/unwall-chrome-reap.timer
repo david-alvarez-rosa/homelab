@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly sweep for stale UnWall Chrome on host /tmp
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

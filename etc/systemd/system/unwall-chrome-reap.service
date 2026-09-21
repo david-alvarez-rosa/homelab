@@ -1,0 +1,6 @@
+[Unit]
+Description=Reap stale Chrome left on host /tmp by UnWall CI and test runs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/unwall-chrome-reap
