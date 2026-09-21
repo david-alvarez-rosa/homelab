@@ -7,6 +7,7 @@ services:
     environment:
       DATABASE_URL: postgresql://umami:${DB_PASSWORD}@db:5432/umami
       SKIP_LOCATION_HEADERS: 1
+      CLIENT_IP_HEADER: X-Real-IP
       APP_SECRET: ${APP_SECRET}
     depends_on:
       db:
