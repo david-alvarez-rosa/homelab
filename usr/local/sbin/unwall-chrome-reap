@@ -1,0 +1,22 @@
+#!/bin/sh
+# Safety net for Chrome left on the host /tmp by CI or manual test runs. Production is exempt
+# twice over: it runs under PrivateTmp (its profiles are not on the host /tmp at all, even though
+# its cmdline says /tmp/...), and its uid is skipped explicitly below.
+set -u
+PROD_UID=$(id -u unwall 2>/dev/null || echo 999)
+AGE_MIN=${AGE_MIN:-360}
+DRY=${DRY:-0}
+found=0
+for dir in /tmp/unwall-chrome-*; do
+  [ -d "$dir" ] || continue
+  case "$dir" in *"-$PROD_UID-"*) continue ;; esac
+  [ -n "$(find "$dir" -maxdepth 0 -mmin +"$AGE_MIN" 2>/dev/null)" ] || continue
+  for pid in $(pgrep -f -- "[-]-user-data-dir=$dir" 2>/dev/null); do
+    uid=$(stat -c %u "/proc/$pid" 2>/dev/null) || continue
+    [ "$uid" = "$PROD_UID" ] && continue
+    found=$((found+1))
+    [ "$DRY" = "1" ] && echo "  would kill pid=$pid uid=$uid dir=$dir" || kill -9 "$pid" 2>/dev/null
+  done
+  [ "$DRY" = "1" ] && echo "  would remove $dir" || rm -rf "$dir"
+done
+echo "unwall-chrome-reap: ${found} stale proc(s), dry=${DRY}, age>${AGE_MIN}min, prod uid ${PROD_UID} exempt"
