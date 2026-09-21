@@ -15,8 +15,16 @@ for dir in /tmp/unwall-chrome-*; do
     uid=$(stat -c %u "/proc/$pid" 2>/dev/null) || continue
     [ "$uid" = "$PROD_UID" ] && continue
     found=$((found+1))
-    [ "$DRY" = "1" ] && echo "  would kill pid=$pid uid=$uid dir=$dir" || kill -9 "$pid" 2>/dev/null
+    if [ "$DRY" = "1" ]; then
+      echo "  would kill pid=$pid uid=$uid dir=$dir"
+    else
+      kill -9 "$pid" 2>/dev/null
+    fi
   done
-  [ "$DRY" = "1" ] && echo "  would remove $dir" || rm -rf "$dir"
+  if [ "$DRY" = "1" ]; then
+    echo "  would remove $dir"
+  else
+    rm -rf "$dir"
+  fi
 done
 echo "unwall-chrome-reap: ${found} stale proc(s), dry=${DRY}, age>${AGE_MIN}min, prod uid ${PROD_UID} exempt"
