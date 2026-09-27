@@ -1,5 +1,23 @@
+import inspect
 import os
+import requests
 from uptime_kuma_api import UptimeKumaApi, MonitorType, NotificationType
+
+
+class KumaApi(UptimeKumaApi):
+    def get_status_page(self, slug):
+        r1 = self._call("getStatusPage", slug)
+        r2 = requests.get(f"{self.url}/api/status-page/{slug}", timeout=self.timeout).json()
+        self._live_config = {**r1["config"], **r2["config"]}
+        known = inspect.signature(UptimeKumaApi._build_status_page_data).parameters
+        config = {k: v for k, v in self._live_config.items() if k in known}
+        return {**config, "incident": None,
+                "publicGroupList": r2["publicGroupList"], "maintenanceList": r2["maintenanceList"]}
+
+    def _build_status_page_data(self, *args, **kwargs):
+        slug, config, icon, groups = super()._build_status_page_data(*args, **kwargs)
+        return slug, {**getattr(self, "_live_config", {}), **config}, icon, groups
+
 
 URL = "http://127.0.0.1:3011"
 USER = os.environ["KUMA_USER"]
@@ -7,7 +25,7 @@ PW = os.environ["KUMA_PASS"]
 TITLE = "Homelab Status"
 SLUG = "main"
 
-api = UptimeKumaApi(URL)
+api = KumaApi(URL)
 api.login(USER, PW)
 existing = {m["name"]: m["id"] for m in api.get_monitors()}
 
