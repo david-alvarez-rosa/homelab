@@ -18,7 +18,8 @@
     },
     "setting_defaults": {
         "breadcrumbs": true,
-        "RoomList.showPeopleSection": false
+        "RoomList.showPeopleSection": false,
+        "ctrlFForSearch": true
     },
     "io.element.e2ee": {
         "default": false,
