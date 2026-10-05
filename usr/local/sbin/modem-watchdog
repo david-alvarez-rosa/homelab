@@ -1,0 +1,18 @@
+#!/bin/sh
+SRC=192.168.8.100
+STAMP=/run/modem-watchdog.last
+COOLDOWN=600
+
+for t in 1.1.1.1 8.8.8.8 9.9.9.9; do
+    ping -c3 -W3 -I "$SRC" "$t" >/dev/null 2>&1 && exit 0
+done
+
+now=$(date +%s)
+last=$(cat "$STAMP" 2>/dev/null || echo 0)
+if [ $((now - last)) -lt $COOLDOWN ]; then
+    echo "lte egress down, reset skipped (cooldown)"
+    exit 0
+fi
+echo "$now" > "$STAMP"
+echo "lte egress down, resetting modem"
+/usr/local/sbin/modem-reset -f

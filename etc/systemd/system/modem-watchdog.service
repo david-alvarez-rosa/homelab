@@ -1,0 +1,6 @@
+[Unit]
+Description=Reset the LTE modem when egress through it stops working
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/modem-watchdog
