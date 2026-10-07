@@ -10,7 +10,6 @@
     "brand": "alvarezrosa",
     "default_country_code": "ES",
     "show_labs_settings": false,
-    "default_theme": "light",
     "room_directory": {
         "servers": [
             "matrix.alvarezrosa.com"
@@ -19,7 +18,8 @@
     "setting_defaults": {
         "breadcrumbs": true,
         "RoomList.showPeopleSection": false,
-        "ctrlFForSearch": true
+        "ctrlFForSearch": true,
+        "use_system_theme": true
     },
     "io.element.e2ee": {
         "default": false,
