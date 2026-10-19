@@ -2,6 +2,8 @@
 # Safety net for Chrome left on the host /tmp by CI or manual test runs. Production is exempt
 # twice over: it runs under PrivateTmp (its profiles are not on the host /tmp at all, even though
 # its cmdline says /tmp/...), and its uid is skipped explicitly below.
+# A live Chrome keeps touching its profile dir, so live procs are aged by their own runtime;
+# the dir mtime only decides removal once nothing is left running in it.
 set -u
 PROD_UID=$(id -u unwall 2>/dev/null || echo 999)
 AGE_MIN=${AGE_MIN:-360}
@@ -10,17 +12,29 @@ found=0
 for dir in /tmp/unwall-chrome-*; do
   [ -d "$dir" ] || continue
   case "$dir" in *"-$PROD_UID-"*) continue ;; esac
-  [ -n "$(find "$dir" -maxdepth 0 -mmin +"$AGE_MIN" 2>/dev/null)" ] || continue
+  live=0
+  killed=0
   for pid in $(pgrep -f -- "[-]-user-data-dir=$dir" 2>/dev/null); do
     uid=$(stat -c %u "/proc/$pid" 2>/dev/null) || continue
     [ "$uid" = "$PROD_UID" ] && continue
+    age=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ') || continue
+    [ -n "$age" ] || continue
+    if [ "$age" -lt $((AGE_MIN * 60)) ]; then
+      live=1
+      continue
+    fi
     found=$((found+1))
+    killed=$((killed+1))
     if [ "$DRY" = "1" ]; then
-      echo "  would kill pid=$pid uid=$uid dir=$dir"
+      echo "  would kill pid=$pid uid=$uid age=$((age / 60))min dir=$dir"
     else
       kill -9 "$pid" 2>/dev/null
     fi
   done
+  [ "$live" = "0" ] || continue
+  if [ "$killed" -eq 0 ] && [ -z "$(find "$dir" -maxdepth 0 -mmin +"$AGE_MIN" 2>/dev/null)" ]; then
+    continue
+  fi
   if [ "$DRY" = "1" ]; then
     echo "  would remove $dir"
   else
