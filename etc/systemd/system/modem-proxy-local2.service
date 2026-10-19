@@ -1,0 +1,14 @@
+[Unit]
+Description=SOCKS5 proxy egressing via the second LTE modem, loopback no-auth (microsocks)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/microsocks -i 127.0.0.1 -p 1082 -b 192.168.9.100
+Restart=on-failure
+RestartSec=2
+DynamicUser=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

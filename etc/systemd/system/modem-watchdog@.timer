@@ -1,5 +1,5 @@
 [Unit]
-Description=Probe LTE modem egress every 2 minutes
+Description=Probe LTE modem egress on %i every 2 minutes
 
 [Timer]
 OnBootSec=3min

@@ -7,5 +7,11 @@ iface enp3s0f1 inet6 auto
 allow-hotplug enx001e101f0000
 iface enx001e101f0000 inet static
     address 192.168.8.100/24
-    post-up /usr/local/sbin/modem-routing $IFACE
+    post-up /usr/local/sbin/modem-routing $IFACE 100
     pre-down ip rule del from 192.168.8.100 table 100 priority 100
+
+allow-hotplug enx76c4c924b596
+iface enx76c4c924b596 inet static
+    address 192.168.9.100/24
+    post-up /usr/local/sbin/modem-routing $IFACE 101
+    pre-down ip rule del from 192.168.9.100 table 101 priority 101

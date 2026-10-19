@@ -1,15 +1,14 @@
 #!/bin/sh
 set -e
-IF=enx001e101f0000
-GW=192.168.8.1
+FORCE=
+[ "$1" = "-f" ] && { FORCE=1; shift; }
+IF=${1:-enx001e101f0000}
+SRC=$(ip -4 -o addr show dev "$IF" | awk '{print $4}' | cut -d/ -f1)
+GW=${SRC%.*}.1
 C=$(mktemp)
 trap 'rm -f "$C"' EXIT
 
-usbdev() {
-    for d in /sys/bus/usb/devices/[0-9]*-[0-9]*; do
-        [ "$(cat "$d/idVendor" 2>/dev/null)" = "12d1" ] && { basename "$d"; return; }
-    done
-}
+D=$(basename "$(dirname "$(readlink -f "/sys/class/net/$IF/device")")")
 
 tok() {
     curl -s -c "$C" --max-time 8 "http://$GW/api/webserver/SesTokInfo" \
@@ -25,8 +24,7 @@ field() {
 }
 
 replug() {
-    D=$(usbdev)
-    [ -n "$D" ] || { echo "no huawei modem on usb" >&2; exit 1; }
+    [ -e "/sys/bus/usb/devices/$D/authorized" ] || { echo "no usb device for $IF" >&2; exit 1; }
     echo 0 > "/sys/bus/usb/devices/$D/authorized"
     sleep 6
     echo 1 > "/sys/bus/usb/devices/$D/authorized"
@@ -39,7 +37,7 @@ replug() {
     sleep 25
 }
 
-if [ "$1" != "-f" ] && ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1; then
+if [ -z "$FORCE" ] && ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1; then
     echo "modem responsive, use -f to reset anyway"
 else
     replug
