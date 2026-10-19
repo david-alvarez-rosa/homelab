@@ -138,7 +138,6 @@ echo "$OUTPUT" > containers.yml
 sed -i '/container_name/d' containers.yml
 sed -i 's|^ $||' containers.yml
 
-# Additional config for collabora
 cat << EOL > /tmp/additional-collabora.config
     command: \${ADDITIONAL_COLLABORA_OPTIONS}
 EOL

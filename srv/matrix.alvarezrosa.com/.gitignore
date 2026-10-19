@@ -1,7 +1,5 @@
 .env
 
-# Config files below hold secrets — not tracked. Only secret-free files
-# (compose.yaml, log.config) are in git.
 synapse-data/*
 !synapse-data/matrix.alvarezrosa.com.log.config
 mautrix-whatsapp/*

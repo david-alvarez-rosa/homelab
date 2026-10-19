@@ -1,9 +1,4 @@
 #!/bin/sh
-# Safety net for Chrome left on the host /tmp by CI or manual test runs. Production is exempt
-# twice over: it runs under PrivateTmp (its profiles are not on the host /tmp at all, even though
-# its cmdline says /tmp/...), and its uid is skipped explicitly below.
-# A live Chrome keeps touching its profile dir, so live procs are aged by their own runtime;
-# the dir mtime only decides removal once nothing is left running in it.
 set -u
 PROD_UID=$(id -u unwall 2>/dev/null || echo 999)
 AGE_MIN=${AGE_MIN:-360}
