@@ -1,5 +1,5 @@
 [Unit]
-Description=SOCKS5 proxy egressing via LTE modem, loopback no-auth (microsocks)
+Description=SOCKS5 proxy egressing via the Digi LTE modem, loopback no-auth (microsocks)
 After=network-online.target
 Wants=network-online.target
 

@@ -1,0 +1,5 @@
+[Match]
+Property=ID_VENDOR_ID=12d1 ID_MODEL_ID=155e
+
+[Link]
+Name=lte-lowi

@@ -2,7 +2,7 @@
 set -e
 FORCE=
 [ "$1" = "-f" ] && { FORCE=1; shift; }
-IF=${1:-enx001e101f0000}
+IF=${1:-lte-digi}
 SRC=$(ip -4 -o addr show dev "$IF" | awk '{print $4}' | cut -d/ -f1)
 GW=${SRC%.*}.1
 C=$(mktemp)

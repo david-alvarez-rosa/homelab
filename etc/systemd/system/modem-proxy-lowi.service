@@ -1,5 +1,5 @@
 [Unit]
-Description=SOCKS5 proxy egressing via the second LTE modem, loopback no-auth (microsocks)
+Description=SOCKS5 proxy egressing via the Lowi LTE modem, loopback no-auth (microsocks)
 After=network-online.target
 Wants=network-online.target
 
