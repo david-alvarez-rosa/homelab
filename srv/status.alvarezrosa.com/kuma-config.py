@@ -31,9 +31,10 @@ SLUG = "main"
 api = KumaApi(URL)
 api.login(USER, PW)
 existing = {m["name"]: m["id"] for m in api.get_monitors()}
-if "LTE modem (GB)" in existing:
-    api.edit_monitor(existing["LTE modem (GB)"], name="LTE Digi (GB)")
-    existing["LTE Digi (GB)"] = existing.pop("LTE modem (GB)")
+for old, new in (("LTE modem (GB)", "LTE Digi (GB)"), ("LTE tunnel (wg1)", "LTE tunnel Digi"), ("LTE tunnel Digi (wg1)", "LTE tunnel Digi"), ("LTE tunnel Lowi (wg2)", "LTE tunnel Lowi")):
+    if old in existing:
+        api.edit_monitor(existing[old], name=new)
+        existing[new] = existing.pop(old)
 
 NOTIFY = "Email — david@alvarezrosa.com"
 notifications = {n["name"]: n["id"] for n in api.get_notifications()}
@@ -121,7 +122,8 @@ infra.append(ensure("IRC bouncer (ZNC)", type=MonitorType.PORT, hostname="host.d
 infra.append(ensure("irc.alvarezrosa.com (IRC)", type=MonitorType.PORT, hostname="irc.alvarezrosa.com", port=6697, parent=g_infra))
 infra.append(ensure("GitHub runner", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("fail2ban", type=MonitorType.PUSH, parent=g_infra))
-infra.append(ensure("LTE tunnel (wg1)", type=MonitorType.PUSH, parent=g_infra))
+infra.append(ensure("LTE tunnel Digi", type=MonitorType.PUSH, parent=g_infra))
+infra.append(ensure("LTE tunnel Lowi", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("LTE Digi proxy", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("LTE Lowi proxy", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))

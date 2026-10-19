@@ -111,7 +111,8 @@ push_wg() {
     --data-urlencode "msg=$msg" || true
 }
 
-push_wg "${WG1_TOKEN:-}" wg1
+push_wg "${LTE_DIGI_WG_TOKEN:-}" wg-digi
+push_wg "${LTE_LOWI_WG_TOKEN:-}" wg-lowi
 
 push_proxy() {
   local token="$1" port="$2" status="down" out code ms msg
