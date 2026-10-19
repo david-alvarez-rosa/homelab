@@ -94,3 +94,21 @@ push_service() {
 push_service "${RSPAMD_TOKEN:-}"   rspamd
 push_service "${RUNNER_TOKEN:-}"   github-runner
 push_service "${FAIL2BAN_TOKEN:-}" fail2ban
+
+push_wg() {
+  local token="$1" iface="$2" status="down" hs age msg
+  [ -z "$token" ] && return 0
+  hs=$(wg show "$iface" latest-handshakes 2>/dev/null | awk "{print \$2; exit}")
+  if [ -n "$hs" ] && [ "$hs" -gt 0 ]; then
+    age=$(( $(date +%s) - hs ))
+    [ "$age" -lt 300 ] && status="up"
+    msg="handshake ${age}s ago"
+  else
+    msg="$iface no handshake"
+  fi
+  curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
+    --data-urlencode "status=$status" \
+    --data-urlencode "msg=$msg" || true
+}
+
+push_wg "${WG1_TOKEN:-}" wg1

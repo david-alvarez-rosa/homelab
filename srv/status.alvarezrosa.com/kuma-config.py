@@ -18,6 +18,9 @@ class KumaApi(UptimeKumaApi):
         slug, config, icon, groups = super()._build_status_page_data(*args, **kwargs)
         return slug, {**getattr(self, "_live_config", {}), **config}, icon, groups
 
+    def _build_monitor_data(self, *args, **kwargs):
+        return {"conditions": "[]", **super()._build_monitor_data(*args, **kwargs)}
+
 
 URL = "http://127.0.0.1:3011"
 USER = os.environ["KUMA_USER"]
@@ -115,6 +118,7 @@ infra.append(ensure("IRC bouncer (ZNC)", type=MonitorType.PORT, hostname="host.d
 infra.append(ensure("irc.alvarezrosa.com (IRC)", type=MonitorType.PORT, hostname="irc.alvarezrosa.com", port=6697, parent=g_infra))
 infra.append(ensure("GitHub runner", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("fail2ban", type=MonitorType.PUSH, parent=g_infra))
+infra.append(ensure("LTE tunnel (wg1)", type=MonitorType.PUSH, parent=g_infra))
 infra.append(ensure("Network — internet", type=MonitorType.PING, hostname="1.1.1.1", parent=g_infra))
 infra.append(ensure("Backup — restic", type=MonitorType.PUSH, parent=g_infra, interval=93600))
 
