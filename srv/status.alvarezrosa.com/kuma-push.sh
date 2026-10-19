@@ -9,7 +9,6 @@ RAM_MAX=90
 DISK_MAX=90
 TEMP_MAX=90
 ETH_STATE="/var/lib/kuma-push/eth.last"
-MODEM_STATE="/var/lib/kuma-push/modem.last"
 
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
 
@@ -79,7 +78,8 @@ push_net() {
 }
 
 push_net "${ETH_TOKEN:-}" "${ETH_IFACE:-}" "$ETH_STATE"
-push_net "${MODEM_TOKEN:-}" "${MODEM_IFACE:-}" "$MODEM_STATE"
+push_net "${LTE_DIGI_TOKEN:-}" lte-digi /var/lib/kuma-push/lte-digi.last
+push_net "${LTE_LOWI_TOKEN:-}" lte-lowi /var/lib/kuma-push/lte-lowi.last
 
 push_service() {
   local token="$1" unit="$2" status="down" state
@@ -112,3 +112,30 @@ push_wg() {
 }
 
 push_wg "${WG1_TOKEN:-}" wg1
+
+push_proxy() {
+  local token="$1" port="$2" status="down" out code ms msg
+  [ -z "$token" ] && return 0
+  for _ in 1 2; do
+    out=$(curl -s -o /dev/null -m 20 -w "%{http_code} %{time_total}" \
+      --socks5-hostname "127.0.0.1:$port" https://www.cloudflare.com/cdn-cgi/trace || true)
+    code=${out%% *}
+    [ "$code" = "200" ] && break
+    sleep 20
+  done
+  if [ "$code" = "200" ]; then
+    status="up"
+    ms=$(awk -v t="${out#* }" 'BEGIN{printf "%d", t*1000}')
+    msg="HTTP 200 in ${ms} ms"
+  else
+    ms=0
+    msg="no response via :$port"
+  fi
+  curl -fsS -m 10 -o /dev/null -G "$BASE/$token" \
+    --data-urlencode "status=$status" \
+    --data-urlencode "msg=$msg" \
+    --data-urlencode "ping=$ms" || true
+}
+
+push_proxy "${LTE_DIGI_PROXY_TOKEN:-}" 1081
+push_proxy "${LTE_LOWI_PROXY_TOKEN:-}" 1082
