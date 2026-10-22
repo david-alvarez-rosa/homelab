@@ -1,0 +1,21 @@
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/gshadow -p wa -k identity
+-w /etc/sudoers -p wa -k sudoers
+-w /etc/sudoers.d -p wa -k sudoers
+-w /etc/pam.d -p wa -k pam
+-w /etc/ssh/sshd_config -p wa -k sshd
+-w /etc/ssh/sshd_config.d -p wa -k sshd
+-w /root/.ssh -p wa -k ssh_keys
+-w /home/david/.ssh -p wa -k ssh_keys
+-w /etc/ld.so.preload -p wa -k preload
+-w /etc/crontab -p wa -k cron
+-w /etc/cron.d -p wa -k cron
+-w /var/spool/cron -p wa -k cron
+-w /etc/systemd/system -p wa -k systemd
+-w /usr/local/bin -p wa -k localbin
+-w /usr/local/sbin -p wa -k localbin
+-a always,exit -F arch=b64 -S init_module,finit_module,delete_module -k modules
+-a always,exit -F arch=b64 -S execve -F auid>=0 -F auid!=unset -k session_exec
+-a always,exit -F arch=b32 -S execve -F auid>=0 -F auid!=unset -k session_exec
