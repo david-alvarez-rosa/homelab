@@ -1,0 +1,26 @@
+[Unit]
+Description=Transcribe Matrix voice messages with Whisper
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+DynamicUser=yes
+LoadCredential=registration:/srv/matrix.alvarezrosa.com/synapse-data/mautrix-whatsapp-registration.yaml
+StateDirectory=matrix-transcriber
+CacheDirectory=matrix-transcriber
+Environment=HF_HUB_OFFLINE=1
+Environment=HF_HUB_DISABLE_TELEMETRY=1
+WorkingDirectory=/opt/matrix-transcriber
+ExecStart=/opt/matrix-transcriber/.venv/bin/python /opt/matrix-transcriber/transcriber.py
+Restart=always
+RestartSec=10
+Nice=10
+CPUWeight=20
+MemoryMax=4G
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
