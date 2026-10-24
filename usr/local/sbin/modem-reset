@@ -44,6 +44,27 @@ else
     ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1 || { echo "modem still unreachable" >&2; exit 1; }
 fi
 
+CS=
+for i in 1 2 3; do
+    CS=$(api monitoring/status | field ConnectionStatus)
+    case "$CS" in ''|*[!0-9]*) sleep 2 ;; *) break ;; esac
+done
+case "$CS" in
+    ''|*[!0-9]*) echo "status unreadable ($CS), skipping re-register" ;;
+    901) : ;;
+    *)
+        echo "not connected (status $CS), forcing auto re-register"
+        curl -s -b "$C" --max-time 10 -H "__RequestVerificationToken: $(tok)" -H "Content-Type: text/xml" -d '<?xml version="1.0" encoding="UTF-8"?><request><Mode>0</Mode><Plmn></Plmn><Rat></Rat></request>' "http://$GW/api/net/register" >/dev/null
+        n=0
+        while [ $n -lt 9 ]; do
+            sleep 10
+            CS=$(api monitoring/status | field ConnectionStatus)
+            [ "$CS" = "901" ] && break
+            n=$((n + 1))
+        done
+        ;;
+esac
+
 echo "wan:    $(api device/information | field WanIPAddress)"
 echo "status: $(api monitoring/status | field ConnectionStatus)"
 echo "egress: $(curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip)"
