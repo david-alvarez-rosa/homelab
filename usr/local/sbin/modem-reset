@@ -45,7 +45,7 @@ else
 fi
 
 CS=
-for i in 1 2 3; do
+for _ in 1 2 3; do
     CS=$(api monitoring/status | field ConnectionStatus)
     case "$CS" in ''|*[!0-9]*) sleep 2 ;; *) break ;; esac
 done
