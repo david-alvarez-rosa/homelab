@@ -1,4 +1,5 @@
 smtp      inet  n       -       n       -       -       smtpd
+  -o smtpd_discard_ehlo_keywords=silent-discard,dsn
 submissions inet n      -       n       -       -       smtpd
   -o syslog_name=postfix/submissions
   -o smtpd_tls_wrappermode=yes
