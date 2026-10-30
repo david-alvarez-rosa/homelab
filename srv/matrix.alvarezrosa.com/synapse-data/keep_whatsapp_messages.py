@@ -83,10 +83,21 @@ class KeepWhatsAppMessages:
         if target.content.get("msgtype") == "m.notice":
             return None
         new_content = {k: v for k, v in event.content.items() if k not in EDIT_KEYS}
-        for key in ("body", "formatted_body"):
-            value = new_content.get(key)
-            if isinstance(value, str) and value.startswith(EDIT_PREFIX):
-                new_content[key] = EDITED_MARK + value[len(EDIT_PREFIX):]
+        replacement = event.content.get("m.new_content")
+        if isinstance(replacement, dict) and isinstance(replacement.get("body"), str):
+            for key in ("body", "format", "formatted_body"):
+                new_content.pop(key, None)
+            new_content.update(replacement)
+            new_content.pop("com.beeper.linkpreviews", None)
+            for key in ("body", "formatted_body"):
+                value = new_content.get(key)
+                if isinstance(value, str):
+                    new_content[key] = EDITED_MARK + value
+        else:
+            for key in ("body", "formatted_body"):
+                value = new_content.get(key)
+                if isinstance(value, str) and value.startswith(EDIT_PREFIX):
+                    new_content[key] = EDITED_MARK + value[len(EDIT_PREFIX):]
         new_content["m.relates_to"] = {"m.in_reply_to": {"event_id": target_id}}
         new_event = event.get_dict()
         new_event["content"] = new_content
