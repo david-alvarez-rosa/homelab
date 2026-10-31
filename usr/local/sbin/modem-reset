@@ -37,6 +37,8 @@ replug() {
     sleep 25
 }
 
+UP0=$(api device/information | field uptime)
+
 if [ -z "$FORCE" ] && ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1; then
     echo "modem responsive, use -f to reset anyway"
 else
@@ -65,6 +67,29 @@ case "$CS" in
         ;;
 esac
 
-echo "wan:    $(api device/information | field WanIPAddress)"
-echo "status: $(api monitoring/status | field ConnectionStatus)"
-echo "egress: $(curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip)"
+numeric() {
+    case "$1" in ''|*[!0-9]*) return 1 ;; esac
+}
+
+report() {
+    echo "wan:    $(api device/information | field WanIPAddress)"
+    echo "status: $(api monitoring/status | field ConnectionStatus)"
+    E=$(curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip)
+    echo "egress: $E"
+}
+
+report
+UP1=$(api device/information | field uptime)
+if [ -z "$E" ] && numeric "$UP0" && numeric "$UP1" && [ "$UP1" -ge "$UP0" ]; then
+    echo "modem never rebooted (uptime ${UP1}s), forcing AT^RESET"
+    /usr/local/sbin/modem-at-reset "$GW" "$D"
+    sleep 10
+    n=0
+    while [ $n -lt 20 ]; do
+        ip link show "$IF" >/dev/null 2>&1 && break
+        sleep 3
+        n=$((n + 1))
+    done
+    sleep 30
+    report
+fi

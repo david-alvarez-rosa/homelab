@@ -1,0 +1,40 @@
+#!/opt/hilink/bin/python -I
+import glob
+import os
+import sys
+import time
+
+import serial
+from huawei_lte_api.Client import Client
+from huawei_lte_api.Connection import Connection
+from huawei_lte_api.enums.device import ModeEnum
+
+gw, dev = sys.argv[1], sys.argv[2]
+
+with Connection(f"http://admin:admin@{gw}/", timeout=10) as conn:
+    Client(conn).device.mode(ModeEnum.DEBUG)
+
+tty = None
+for _ in range(30):
+    ports = glob.glob(f"/sys/bus/usb/devices/{dev}:*/ttyUSB*")
+    if ports:
+        tty = "/dev/" + os.path.basename(ports[0])
+        break
+    time.sleep(2)
+if not tty:
+    sys.exit(f"no AT port on {dev} after debug mode switch")
+
+time.sleep(2)
+reply = b""
+with serial.Serial(tty, 115200, timeout=0.5) as s:
+    s.reset_input_buffer()
+    s.write(b"AT^RESET\r\n")
+    deadline = time.time() + 10
+    while time.time() < deadline and b"OK" not in reply and b"ERROR" not in reply:
+        try:
+            reply += s.read(256)
+        except serial.SerialException:
+            reply += b"OK"
+result = "OK" if b"OK" in reply else "ERROR" if b"ERROR" in reply else "no reply"
+print(f"AT^RESET on {tty}: {result}")
+sys.exit(0 if result == "OK" else 1)
