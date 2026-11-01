@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch the Chrome binary for package upgrades
+
+[Path]
+PathChanged=/opt/google/chrome/chrome
+
+[Install]
+WantedBy=paths.target

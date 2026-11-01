@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart unwall after a Chrome upgrade
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl try-restart unwall.service

@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch the cloudflared binary for package upgrades
+
+[Path]
+PathChanged=/usr/bin/cloudflared
+
+[Install]
+WantedBy=paths.target

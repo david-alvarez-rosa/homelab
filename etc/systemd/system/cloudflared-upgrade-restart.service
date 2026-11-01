@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart cloudflared after a package upgrade
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl try-restart cloudflared.service
