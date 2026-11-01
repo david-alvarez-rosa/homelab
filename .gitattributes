@@ -8,7 +8,7 @@ etc/letsencrypt/archive/** filter=git-crypt diff=git-crypt
 etc/letsencrypt/accounts/** filter=git-crypt diff=git-crypt
 srv/**/.env filter=git-crypt diff=git-crypt
 srv/**/.kuma-push.env filter=git-crypt diff=git-crypt
-etc/systemd/system/unwall.service.d/edge-cache.conf filter=git-crypt diff=git-crypt
+etc/unwall-edge-cache.env filter=git-crypt diff=git-crypt
 etc/ssh/ssh_host_*_key filter=git-crypt diff=git-crypt
 etc/xpra/ssl/*.pem filter=git-crypt diff=git-crypt
 srv/matrix.alvarezrosa.com/mautrix-whatsapp/config.yaml filter=git-crypt diff=git-crypt
