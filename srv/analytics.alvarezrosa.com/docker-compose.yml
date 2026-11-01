@@ -1,7 +1,7 @@
 ---
 services:
   umami:
-    image: ghcr.io/umami-software/umami:latest
+    image: ghcr.io/umami-software/umami:3.4.1
     ports:
       - "127.0.0.1:3000:3000"
     environment:
@@ -20,7 +20,9 @@ services:
       timeout: 5s
       retries: 5
   db:
-    image: postgres:15-alpine
+    image: postgres:15.19-alpine
+    shm_size: 1g
+    command: [postgres, -c, shared_buffers=1GB, -c, effective_cache_size=6GB, -c, work_mem=32MB, -c, maintenance_work_mem=512MB, -c, random_page_cost=1.1, -c, effective_io_concurrency=200]
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: umami
