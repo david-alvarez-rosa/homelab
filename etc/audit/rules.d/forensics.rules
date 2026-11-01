@@ -17,5 +17,10 @@
 -w /usr/local/bin -p wa -k localbin
 -w /usr/local/sbin -p wa -k localbin
 -a always,exit -F arch=b64 -S init_module,finit_module,delete_module -k modules
+-a never,exit -F arch=b64 -S execve -F exit=-ENOENT
+-a never,exit -F arch=b32 -S execve -F exit=-ENOENT
+-a never,exit -F arch=b64 -S execve -F exe=/usr/bin/git-crypt
+-a never,exit -F arch=b64 -S execve -F exe=/usr/lib/git-core/git
+-a never,exit -F arch=b64 -S execve -F exe=/usr/bin/git
 -a always,exit -F arch=b64 -S execve -F auid>=0 -F auid!=unset -k session_exec
 -a always,exit -F arch=b32 -S execve -F auid>=0 -F auid!=unset -k session_exec
