@@ -1,0 +1,71 @@
+*filter
+:ufw6-before-input - [0:0]
+:ufw6-before-output - [0:0]
+:ufw6-before-forward - [0:0]
+-A ufw6-before-input -i lo -j ACCEPT
+-A ufw6-before-output -o lo -j ACCEPT
+-A ufw6-before-input -m rt --rt-type 0 -j DROP
+-A ufw6-before-forward -m rt --rt-type 0 -j DROP
+-A ufw6-before-output -m rt --rt-type 0 -j DROP
+-A ufw6-before-input -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A ufw6-before-output -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A ufw6-before-forward -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type echo-reply -j ACCEPT
+-A ufw6-before-input -m conntrack --ctstate INVALID -j ufw6-logging-deny
+-A ufw6-before-input -m conntrack --ctstate INVALID -j DROP
+-A ufw6-before-input -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type packet-too-big -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type router-solicitation -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type neighbor-solicitation -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type neighbor-advertisement -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 141 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 142 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 130 -s fe80::/10 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 131 -s fe80::/10 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 132 -s fe80::/10 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 143 -s fe80::/10 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 148 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 149 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 151 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 152 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 153 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type packet-too-big -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type echo-reply -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type router-solicitation -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type neighbor-advertisement -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type neighbor-solicitation -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 141 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 142 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 130 -s fe80::/10 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 131 -s fe80::/10 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 132 -s fe80::/10 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 143 -s fe80::/10 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 148 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 149 -m hl --hl-eq 255 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 151 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 152 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-output -p icmpv6 --icmpv6-type 153 -s fe80::/10 -m hl --hl-eq 1 -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type packet-too-big -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+-A ufw6-before-forward -p icmpv6 --icmpv6-type echo-reply -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 144 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 145 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 146 -j ACCEPT
+-A ufw6-before-input -p icmpv6 --icmpv6-type 147 -j ACCEPT
+-A ufw6-before-input -p udp -s fe80::/10 --sport 547 -d fe80::/10 --dport 546 -j ACCEPT
+-A ufw6-before-input -p udp -d ff02::fb --dport 5353 -j ACCEPT
+-A ufw6-before-input -p udp -d ff02::f --dport 1900 -j ACCEPT
+-A ufw6-before-input -p tcp --dport 22 -m conntrack --ctstate NEW -m hashlimit --hashlimit-above 20/minute --hashlimit-burst 20 --hashlimit-mode srcip --hashlimit-name ssh6 -j REJECT --reject-with tcp-reset
+COMMIT
