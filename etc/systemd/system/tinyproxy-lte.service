@@ -1,0 +1,15 @@
+[Unit]
+Description=Tinyproxy lightweight HTTP Proxy (Lowi LTE modem)
+After=network.target
+Documentation=man:tinyproxy(8) man:tinyproxy.conf(5)
+
+[Service]
+ExecStart=/usr/bin/tinyproxy -d -c /etc/tinyproxy/tinyproxy-lte.conf
+ExecReload=/bin/kill -USR1 $MAINPID
+PrivateDevices=yes
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
