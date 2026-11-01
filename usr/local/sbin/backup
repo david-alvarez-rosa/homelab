@@ -2,25 +2,38 @@
 set -euo pipefail
 source /root/.restic/env
 
-mkdir -p /var/backups/homelab
-docker exec manual-install-nextcloud-aio-database-1 pg_dump -U nextcloud nextcloud_database > /var/backups/homelab/nextcloud.sql
-docker exec analyticsalvarezrosacom-db-1 pg_dump -U umami umami > /var/backups/homelab/umami.sql
+out=/var/backups/homelab
+mkdir -p "$out"
+umask 077
+docker exec manual-install-nextcloud-aio-database-1 pg_dump -U nextcloud nextcloud_database > "$out/nextcloud.sql"
+docker exec analyticsalvarezrosacom-db-1 pg_dump -U umami umami > "$out/umami.sql"
+docker exec synapse-db pg_dump -U synapse synapse > "$out/synapse.sql"
 for db in /var/lib/unwall/stats.db \
-          /var/lib/api/subscriptions.db; do
-  sqlite3 "$db" ".backup '/var/backups/homelab/$(basename "$db")'"
+          /var/lib/api/subscriptions.db \
+          /srv/matrix.alvarezrosa.com/mautrix-whatsapp/mautrix-whatsapp.db \
+          /var/lib/docker/volumes/statusalvarezrosacom_uptime-kuma/_data/kuma.db; do
+  sqlite3 "$db" ".backup '$out/$(basename "$db")'"
 done
 
+failed=0
 for repo in "$LOCAL_REPO" "$S3_REPO"; do
-  restic -r "$repo" backup --tag homelab \
-    /etc /home /root /srv /var \
-    --exclude /var/lib/docker/rootfs \
-    --exclude /var/lib/containerd \
-    --exclude /var/cache \
-    --exclude '*/.cache' \
-    --exclude /var/lib/docker/volumes/nextcloud_aio_elasticsearch \
-    --exclude /var/lib/docker/volumes/nextcloud_aio_redis
-  restic -r "$repo" forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2
+  if ! { restic -r "$repo" backup --tag homelab \
+      /etc /home /opt /root /srv /var \
+      --exclude /opt/github-runner/_work \
+      --exclude /opt/google \
+      --exclude /var/lib/docker/rootfs \
+      --exclude /var/lib/containerd \
+      --exclude /var/cache \
+      --exclude '*/.cache' \
+      --exclude /var/lib/docker/volumes/nextcloud_aio_elasticsearch \
+      --exclude /var/lib/docker/volumes/nextcloud_aio_redis &&
+    restic -r "$repo" forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2 &&
+    { [ "$(date +%u)" != 7 ] || restic -r "$repo" check --read-data-subset=2%; }; }; then
+    echo "backup failed for $repo" >&2
+    failed=1
+  fi
 done
 
+[ "$failed" = 0 ] || exit 1
 [ -n "${KUMA_BACKUP_URL:-}" ] && curl -fsS -m 10 -o /dev/null -G "$KUMA_BACKUP_URL" \
   --data-urlencode status=up --data-urlencode msg=OK || true
