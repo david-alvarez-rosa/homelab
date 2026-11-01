@@ -1,6 +1,6 @@
 services:
   synapse:
-    image: ghcr.io/element-hq/synapse:latest
+    image: ghcr.io/element-hq/synapse:v1.164.1
     container_name: synapse
     restart: unless-stopped
     environment:
@@ -15,7 +15,7 @@ services:
       db:
         condition: service_healthy
   db:
-    image: postgres:15-alpine
+    image: postgres:15.19-alpine
     container_name: synapse-db
     restart: unless-stopped
     environment:
@@ -31,7 +31,7 @@ services:
       timeout: 5s
       retries: 5
   mautrix-whatsapp:
-    image: dock.mau.dev/mautrix/whatsapp:latest
+    image: dock.mau.dev/mautrix/whatsapp:v0.2610.0
     container_name: mautrix-whatsapp
     restart: unless-stopped
     volumes:
