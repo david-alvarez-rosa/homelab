@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+exec setpriv --reuid=1337 --regid=1337 --clear-groups sqlite3 -cmd '.timeout 10000' /srv/matrix.alvarezrosa.com/mautrix-whatsapp/mautrix-whatsapp.db "DELETE FROM disappearing_message WHERE disappear_at < (CAST(strftime('%s','now') AS INTEGER) - 3600) * 1000000000; SELECT changes();"

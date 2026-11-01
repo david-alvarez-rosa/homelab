@@ -1,0 +1,6 @@
+[Unit]
+Description=Prune overdue WhatsApp disappearing-message rows the keep module blocks
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wa-disappear-prune
