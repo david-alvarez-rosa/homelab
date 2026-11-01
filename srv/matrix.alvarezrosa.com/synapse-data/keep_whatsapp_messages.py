@@ -8,6 +8,7 @@ EDIT_PREFIX = "* "
 EDITED_MARK = "✏️ "
 DELETED_MARK = "🗑️ Deleted"
 MARKABLE_TYPES = ("m.room.message", "m.sticker")
+DISAPPEARED_REASON = "Message disappeared"
 
 
 class KeepWhatsAppMessages:
@@ -29,11 +30,12 @@ class KeepWhatsAppMessages:
                     "keep_whatsapp: blocking redaction %s of %s from %s in %s",
                     event.event_id, event.redacts, event.sender, event.room_id,
                 )
-                self._api.run_as_background_process(
-                    "keep_whatsapp_mark_deleted",
-                    self._mark_deleted,
-                    event.room_id, event.sender, event.redacts,
-                )
+                if event.content.get("reason") != DISAPPEARED_REASON:
+                    self._api.run_as_background_process(
+                        "keep_whatsapp_mark_deleted",
+                        self._mark_deleted,
+                        event.room_id, event.sender, event.redacts,
+                    )
                 return False, None
             if event.type == "m.room.message":
                 unrolled = await self._unroll_edit(event)
