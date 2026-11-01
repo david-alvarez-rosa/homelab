@@ -5,17 +5,20 @@ source /root/.restic/env
 out=/var/backups/homelab
 mkdir -p "$out"
 umask 077
-docker exec manual-install-nextcloud-aio-database-1 pg_dump -U nextcloud nextcloud_database > "$out/nextcloud.sql"
-docker exec analyticsalvarezrosacom-db-1 pg_dump -U umami umami > "$out/umami.sql"
-docker exec synapse-db pg_dump -U synapse synapse > "$out/synapse.sql"
+failed=0
+dump() {
+  docker exec "$1" pg_dump -U "$2" "$3" > "$out/$4.sql" || { echo "dump failed for $4" >&2; failed=1; }
+}
+dump manual-install-nextcloud-aio-database-1 nextcloud nextcloud_database nextcloud
+dump analyticsalvarezrosacom-db-1 umami umami umami
+dump synapse-db synapse synapse synapse
 for db in /var/lib/unwall/stats.db \
           /var/lib/api/subscriptions.db \
           /srv/matrix.alvarezrosa.com/mautrix-whatsapp/mautrix-whatsapp.db \
           /var/lib/docker/volumes/statusalvarezrosacom_uptime-kuma/_data/kuma.db; do
-  sqlite3 "$db" ".backup '$out/$(basename "$db")'"
+  sqlite3 "$db" ".backup '$out/$(basename "$db")'" || { echo "snapshot failed for $db" >&2; failed=1; }
 done
 
-failed=0
 for repo in "$LOCAL_REPO" "$S3_REPO"; do
   if ! { restic -r "$repo" backup --tag homelab \
       /etc /home /opt /root /srv /var \
