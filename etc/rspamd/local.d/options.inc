@@ -1,3 +1,3 @@
 dns {
-  nameserver = ["192.168.1.1"];
+  nameserver = "master-slave:127.0.0.1,9.9.9.9";
 }
