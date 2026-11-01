@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 FORCE=
+RESET=
 [ "$1" = "-f" ] && { FORCE=1; shift; }
 IF=${1:-lte-digi}
 SRC=$(ip -4 -o addr show dev "$IF" | awk '{print $4}' | cut -d/ -f1)
@@ -43,6 +44,7 @@ if [ -z "$FORCE" ] && ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1; then
     echo "modem responsive, use -f to reset anyway"
 else
     replug
+    RESET=1
     ping -c1 -W3 -I "$IF" "$GW" >/dev/null 2>&1 || { echo "modem still unreachable" >&2; exit 1; }
 fi
 
@@ -74,13 +76,24 @@ numeric() {
 report() {
     echo "wan:    $(api device/information | field WanIPAddress)"
     echo "status: $(api monitoring/status | field ConnectionStatus)"
-    E=$(curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip)
+    E=$(egress)
     echo "egress: $E"
 }
 
+egress() {
+    curl -s --max-time 20 --interface "$IF" https://ifconfig.me/ip || true
+}
+
 report
+n=0
+while [ -n "$RESET" ] && [ -z "$E" ] && [ $n -lt 3 ]; do
+    sleep 10
+    E=$(egress)
+    echo "egress retry: $E"
+    n=$((n + 1))
+done
 UP1=$(api device/information | field uptime)
-if [ -z "$E" ] && numeric "$UP0" && numeric "$UP1" && [ "$UP1" -ge "$UP0" ]; then
+if [ -n "$RESET" ] && [ -z "$E" ] && numeric "$UP0" && numeric "$UP1" && [ "$UP1" -ge "$UP0" ]; then
     echo "modem never rebooted (uptime ${UP1}s), forcing AT^RESET"
     /usr/local/sbin/modem-at-reset "$GW" "$D"
     sleep 10
