@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+IF=${1:-lte-lowi}
+SRC=$(ip -4 -o addr show dev "$IF" | awk '{print $4}' | cut -d/ -f1)
+GW=${SRC%.*}.1
+D=$(basename "$(dirname "$(readlink -f "/sys/class/net/$IF/device")")")
+C=$(mktemp)
+trap 'rm -f "$C"' EXIT
+
+api() {
+    t=$(curl -s -c "$C" --max-time 8 "http://$GW/api/webserver/SesTokInfo" | tr -d "\n" | sed -e "s/.*<TokInfo>//" -e "s|</TokInfo>.*||")
+    curl -s -b "$C" --max-time 8 -H "__RequestVerificationToken: $t" "http://$GW/api/$1" | tr -d "\n" | sed -e "s/.*<$2>//" -e "s|</$2>.*||"
+}
+
+egress() {
+    curl -s --max-time 15 --interface "$IF" https://api.ipify.org || true
+}
+
+WAN0=$(api device/information WanIPAddress)
+PUB0=$(egress)
+date +%s > "/run/modem-watchdog.$IF.last"
+/usr/local/sbin/modem-at-reset "$GW" "$D"
+
+n=0
+while [ $n -lt 30 ]; do
+    sleep 5
+    [ "$(api monitoring/status ConnectionStatus 2>/dev/null)" = 901 ] && PUB1=$(egress) && [ -n "$PUB1" ] && break
+    n=$((n + 1))
+done
+WAN1=$(api device/information WanIPAddress)
+
+echo "wan:    $WAN0 -> $WAN1"
+echo "egress: $PUB0 -> $PUB1"
+echo "uptime: $(api device/information uptime)s"
+[ -n "$PUB1" ] || { echo "no egress after rotate" >&2; exit 1; }
+[ "$WAN0" != "$WAN1" ] || { echo "wan address unchanged" >&2; exit 1; }
