@@ -4,6 +4,7 @@ import os
 import sys
 import time
 
+import requests
 import serial
 from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
@@ -11,12 +12,15 @@ from huawei_lte_api.enums.device import ModeEnum
 
 gw, dev = sys.argv[1], sys.argv[2]
 
-with Connection(f"http://admin:admin@{gw}/", timeout=10) as conn:
-    Client(conn).device.mode(ModeEnum.DEBUG)
+try:
+    with Connection(f"http://admin:admin@{gw}/", timeout=10) as conn:
+        Client(conn).device.mode(ModeEnum.DEBUG)
+except requests.exceptions.RequestException:
+    pass
 
 tty = None
 for _ in range(30):
-    ports = glob.glob(f"/sys/bus/usb/devices/{dev}:*/ttyUSB*")
+    ports = sorted(glob.glob(f"/sys/bus/usb/devices/{dev}:*/ttyUSB*"), key=lambda p: int(p.rsplit("ttyUSB", 1)[1]))
     if ports:
         tty = "/dev/" + os.path.basename(ports[0])
         break
