@@ -1,0 +1,11 @@
+[Unit]
+Description=Redirect locally originated SMTP for the public IP back to this host
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/mail-hairpin.nft
+ExecStop=/usr/sbin/nft delete table ip mail-hairpin
+
+[Install]
+WantedBy=multi-user.target
