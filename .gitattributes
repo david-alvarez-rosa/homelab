@@ -20,3 +20,8 @@ etc/postfix/sni.db filter=git-crypt diff=git-crypt
 var/lib/znc/configs/znc.conf filter=git-crypt diff=git-crypt
 var/lib/znc/users/**/moddata/sasl/.registry filter=git-crypt diff=git-crypt
 etc/wa-viewonce.conf filter=git-crypt diff=git-crypt
+etc/nginx/conf.d/api.unwall.app.conf filter=git-crypt diff=git-crypt
+etc/nginx/conf.d/live.unwall.app.conf filter=git-crypt diff=git-crypt
+etc/nginx/conf.d/unwall.app.conf filter=git-crypt diff=git-crypt
+etc/nginx/conf.d/unwall-blocklist.conf filter=git-crypt diff=git-crypt
+etc/nginx/unwall_frame_protection.conf filter=git-crypt diff=git-crypt
