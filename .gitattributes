@@ -25,6 +25,4 @@ etc/nginx/conf.d/live.unwall.app.conf filter=git-crypt diff=git-crypt
 etc/nginx/conf.d/unwall.app.conf filter=git-crypt diff=git-crypt
 etc/nginx/conf.d/unwall-blocklist.conf filter=git-crypt diff=git-crypt
 etc/nginx/unwall_frame_protection.conf filter=git-crypt diff=git-crypt
-usr/local/sbin/unwall-*.py filter=git-crypt diff=git-crypt
-usr/local/sbin/unwall-origin-review.sh filter=git-crypt diff=git-crypt
 etc/unwall-autoban-allow filter=git-crypt diff=git-crypt
