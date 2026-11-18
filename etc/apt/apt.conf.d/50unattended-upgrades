@@ -10,3 +10,5 @@ Dpkg::Options {
         "--force-confdef";
         "--force-confold";
 };
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "05:00";
