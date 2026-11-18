@@ -1,0 +1,5 @@
+[Unit]
+Description=Ban UnWall clients caught automating the web app
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/unwall-autoban.py

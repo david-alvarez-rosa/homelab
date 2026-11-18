@@ -1,0 +1,7 @@
+[Unit]
+Description=UnWall automation ban sweep
+[Timer]
+OnCalendar=*:07/15
+Persistent=true
+[Install]
+WantedBy=timers.target
