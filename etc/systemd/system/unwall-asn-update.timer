@@ -1,0 +1,7 @@
+[Unit]
+Description=Weekly UnWall hosting ASN refresh
+[Timer]
+OnCalendar=Sun 05:17
+Persistent=true
+[Install]
+WantedBy=timers.target

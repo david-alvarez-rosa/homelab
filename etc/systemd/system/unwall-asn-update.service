@@ -1,0 +1,6 @@
+[Unit]
+Description=Refresh UnWall hosting ASN map
+After=network-online.target
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/unwall-asn-update.py
