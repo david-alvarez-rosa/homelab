@@ -1,0 +1,9 @@
+[Unit]
+Description=One-off UnWall nginx shadow log review
+
+[Timer]
+OnCalendar=2026-11-10 09:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+[Unit]
+Description=Mail the UnWall nginx shadow log review
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/unwall-origin-review.sh --mail
